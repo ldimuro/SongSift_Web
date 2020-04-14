@@ -8,13 +8,16 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-import {MatRadioModule} from '@angular/material/radio';
+import { MatRadioModule } from '@angular/material/radio';
+import { SpotifyComponent } from './spotify/components/spotify/spotify.component';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    NowPlayingComponent
+    NowPlayingComponent,
+    SpotifyComponent
   ],
   imports: [
     BrowserModule,
@@ -23,10 +26,12 @@ import {MatRadioModule} from '@angular/material/radio';
     MatIconModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
-    MatRadioModule
+    MatRadioModule,
+    HttpClient,
+    HttpClientModule
   ],
   exports: [MatButtonToggleModule, MatIconModule, ReactiveFormsModule, BrowserAnimationsModule, MatRadioModule],
-  providers: [],
+  providers: [HttpClient, HttpClientModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
