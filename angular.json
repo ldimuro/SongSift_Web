@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "SongSift-Web"
+    }
+  },
+  "defaultProject": "SongSift-Web",
+  "cli": {
+    "analytics": false
+  }
 }

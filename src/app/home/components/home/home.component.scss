@@ -1,3 +1,140 @@
 .title {
     text-align: center;
+    color: #ff737e;
 }
+
+.view {
+    // background-color: blue;
+    font-family: Helvetica, sans-serif;
+}
+
+.tempo input[type="radio"] {
+    -webkit-appearance: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    outline: none;
+    box-shadow: 0 0 0 3px lightgray;
+}
+
+.tempo input[type="radio"]:before {
+    content: "";
+    display: block;
+    width: 60%;
+    height: 60%;
+    margin: 20% auto;
+    border-radius: 50%;
+}
+
+.tempo input[type="radio"]:checked:before {
+    background: #ff737e;
+}
+
+.danceability input[type="radio"] {
+    -webkit-appearance: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    outline: none;
+    box-shadow: 0 0 0 3px lightgray;
+}
+
+.danceability input[type="radio"]:before {
+    content: "";
+    display: block;
+    width: 60%;
+    height: 60%;
+    margin: 20% auto;
+    border-radius: 50%;
+}
+
+.danceability input[type="radio"]:checked:before {
+    background: #ff737e;
+}
+
+.happiness input[type="radio"] {
+    -webkit-appearance: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    outline: none;
+    box-shadow: 0 0 0 3px lightgray;
+}
+
+.happiness input[type="radio"]:before {
+    content: "";
+    display: block;
+    width: 60%;
+    height: 60%;
+    margin: 20% auto;
+    border-radius: 50%;
+}
+
+.happiness input[type="radio"]:checked:before {
+    background: #ff737e;
+}
+
+.energy input[type="radio"] {
+    -webkit-appearance: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    outline: none;
+    box-shadow: 0 0 0 3px lightgray;
+}
+
+.energy input[type="radio"]:before {
+    content: "";
+    display: block;
+    width: 60%;
+    height: 60%;
+    margin: 20% auto;
+    border-radius: 50%;
+}
+
+.energy input[type="radio"]:checked:before {
+    background: #ff737e;
+}
+
+.role {
+    margin-right: 50px;
+    margin-left: 10px;
+    font-weight: normal;
+}
+
+.checkbox label {
+    margin-bottom: 10px;
+}
+
+.roles {
+    // margin-bottom: 40px;
+    margin: auto;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    color: #ff737e;
+}
+
+.centerDiv {
+    display: flex;
+    justify-content: center;
+    margin-left: 55px;
+}
+
+.centerButton {
+    display: block;
+    margin: auto;
+    padding: 10px 150px;
+    background-color: #ff737e;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    outline: none;
+}
+
+button:focus {
+    background-color: #ff4756;
+}
+
