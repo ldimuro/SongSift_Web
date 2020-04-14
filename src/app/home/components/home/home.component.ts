@@ -24,6 +24,11 @@ export class HomeComponent implements OnInit {
 
   buttonClicked() {
     console.log('it worked');
+
+    this._spotifyService.getAuth()
+      .subscribe(data => {
+        console.log(data);
+      })
   }
 
 }

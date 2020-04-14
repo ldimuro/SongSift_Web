@@ -27,11 +27,11 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
     BrowserAnimationsModule,
     ReactiveFormsModule,
     MatRadioModule,
-    HttpClient,
-    HttpClientModule
+    HttpClientModule,
+    HttpClient
   ],
   exports: [MatButtonToggleModule, MatIconModule, ReactiveFormsModule, BrowserAnimationsModule, MatRadioModule],
-  providers: [HttpClient, HttpClientModule],
+  providers: [HttpClient],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
