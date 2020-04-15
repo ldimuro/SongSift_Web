@@ -14,7 +14,8 @@ export class SpotifyService {
   private clientSecret = '42c2e656f635427c95618a49a1c6ce07';
   private body: any;
   private url = 'https://accounts.spotify.com/authorize?client_id=30a58f631e5d4a0d8331fc0d29e052f9' +
-    '&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A4200%2Fnow-playing%2F';
+    '&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A4200%2Fnow-playing%2F&scope=user-read-private%20' +
+    'user-library-read%20user-top-read';
 
   private accessToken: any;
   private refreshToken: any;
@@ -33,7 +34,8 @@ export class SpotifyService {
       .set('client_id', this.clientId)
       .set('response_type', 'code')
       .set('redirect_uri', 'http://localhost:4200/now-playing/')
-      .set('scope', 'user-read-private');
+      .set('scope', 'user-read-private')
+      .set('scope', 'user-library-read');
     const options = {
       headers,
       params
@@ -41,27 +43,10 @@ export class SpotifyService {
 
     console.log(this.url);
     window.location.href = this.url;
-
-    //return this.http.get(this.url, { responseType: 'text' });
-    //.subscribe(response => console.log(response));
   }
 
   getToken() {
     const tokenUrl = 'https://accounts.spotify.com/api/token';
-
-    // const headers = new HttpHeaders({
-    //   'Content-Type': 'application/x-www-form-urlencoded',
-    //   'Authorization': 'Basic ' + btoa(this.clientId + ':' + this.clientSecret)
-    // });
-
-    // const params = new HttpParams()
-    //   .set('grant_type', 'authorization_code')
-    //   .set('code', this.nowPlayingSvc.getCode())
-    //   .set('redirect_uri', 'http://localhost:4200/now-playing/');
-    // const options = {
-    //   headers,
-    //   params
-    // };
 
     const headers = { 'Authorization': 'Basic ' + btoa(this.clientId + ':' + this.clientSecret),
                       'Content-Type': 'application/x-www-form-urlencoded'};
@@ -70,6 +55,7 @@ export class SpotifyService {
                   code: this.nowPlayingSvc.getCode(),
                   redirect_uri: encodeURIComponent('http://localhost:4200/now-playing/')};
 
+    // tslint:disable-next-line:max-line-length
     const newBody = `grant_type=authorization_code&code=${this.nowPlayingSvc.getCode()}&redirect_uri=${encodeURIComponent('http://localhost:4200/now-playing/')}`;
 
 
@@ -82,14 +68,73 @@ export class SpotifyService {
   }
 
   getArtist() {
-    // const url = 'https://api.spotify.com/v1/';
+    const url = 'https://api.spotify.com/v1/';
 
-    // const headers: HttpHeaders = new HttpHeaders({
-    //   'Authorization': 'Bearer BQBCmAvTI8T_Z639OSpM8hwiq0y7zQFqc72b1bw-ze9x6huOW0ghH7YVFrtDSjw0xc4UWPxMI1VHOkKHOdE'
-    // });
+    const headers: HttpHeaders = new HttpHeaders({
+      Authorization: 'Bearer ' + this.accessToken
+    });
 
-    // return this.http.get(url + `search?q=weezer&type=artist&market=SV&offset=0&limit=20`, {headers})
-    //   .subscribe(data => console.log(data));
+    return this.http.get(url + `search?q=weezer&type=artist&market=SV&offset=0&limit=20`, {headers})
+      .subscribe(data => console.log(data));
+  }
+
+  getAlbum() {
+    const url = 'https://api.spotify.com/v1/';
+
+    const headers: HttpHeaders = new HttpHeaders({
+      Authorization: 'Bearer ' + this.accessToken
+    });
+
+    return this.http.get(url + `search?q=weezer&type=album&market=SV&offset=0&limit=20`, {headers})
+      .subscribe(data => console.log(data));
+  }
+
+  getTrackInfo() {
+    const url = 'https://api.spotify.com/v1/';
+
+    const headers: HttpHeaders = new HttpHeaders({
+      Authorization: 'Bearer ' + this.accessToken
+    });
+
+    // ID #1: Bodysnatchers
+    // ID #2: Let It Happen
+    // ID #3: To Build A Home
+
+    return this.http.get(url + `audio-features?ids=4m0Vgr48VFaMYw0Sp1ozJu,2X485T9Z5Ly0xyaghN73ed,3AqPL1n1wKc5DVFFnYuJhp`, {headers})
+      .subscribe(data => console.log(data));
+  }
+
+  getSong() {
+    const url = 'https://api.spotify.com/v1/';
+
+    const headers: HttpHeaders = new HttpHeaders({
+      Authorization: 'Bearer ' + this.accessToken
+    });
+
+    return this.http.get(url + `search?q=to%20build%20a%20home&type=track&market=US&offset=0&limit=20`, {headers})
+      .subscribe(data => console.log(data));
+  }
+
+  getUserTracks() {
+    const url = 'https://api.spotify.com/v1/me/';
+
+    const headers: HttpHeaders = new HttpHeaders({
+      Authorization: 'Bearer ' + this.accessToken
+    });
+
+    return this.http.get(url + `tracks?market=US&offset=0&limit=50`, {headers})
+      .subscribe(data => console.log(data));
+  }
+
+  getTopTracks() {
+    const url = 'https://api.spotify.com/v1/me/top/tracks';
+
+    const headers: HttpHeaders = new HttpHeaders({
+      Authorization: 'Bearer ' + this.accessToken
+    });
+
+    return this.http.get(url, {headers})
+      .subscribe(data => console.log(data));
   }
 
 

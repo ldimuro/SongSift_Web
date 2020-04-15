@@ -15,7 +15,8 @@ export class NowPlayingComponent implements OnInit {
   token: string;
 
   constructor(private nowPlayingSvc: NowPlayingService,
-              private spotifySvc: SpotifyService) { }
+              private spotifySvc: SpotifyService,
+              private router: Router) { }
 
   ngOnInit() {
     this.nowPlayingSvc.parseCode();
@@ -24,5 +25,25 @@ export class NowPlayingComponent implements OnInit {
 
   getToken() {
     this.spotifySvc.getToken();
+  }
+
+  getTrackInfo() {
+    this.spotifySvc.getTrackInfo();
+  }
+
+  getSong() {
+    this.spotifySvc.getSong();
+  }
+
+  getUsersTracks() {
+    this.spotifySvc.getUserTracks();
+  }
+
+  getTopTracks() {
+    this.spotifySvc.getTopTracks();
+  }
+
+  backToHome() {
+    this.router.navigate(['/home'], {replaceUrl: true});
   }
 }
