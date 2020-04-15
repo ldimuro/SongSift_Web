@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { SpotifyService } from 'src/app/spotify/services/spotify.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +19,4 @@ export class NowPlayingService {
   getCode() {
     return this.code;
   }
-
 }
