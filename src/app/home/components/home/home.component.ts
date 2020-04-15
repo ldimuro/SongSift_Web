@@ -10,11 +10,10 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  searchStr: string;
-  query: FormControl = new FormControl();
 
   favoriteSeason: string;
   seasons: string[] = ['1', '2', '3', '4', '5'];
+  data: string;
 
   constructor(private _spotifyService: SpotifyService) { }
 
@@ -25,10 +24,13 @@ export class HomeComponent implements OnInit {
   buttonClicked() {
     console.log('it worked');
 
-    this._spotifyService.getAuth()
-      .subscribe(data => {
-        console.log(data);
-      })
+    this._spotifyService.getAuth();
+      // .subscribe(data => {
+      //   console.log(data);
+      //   this.data = data;
+      // });
+
+    // this._spotifyService.getArtist();
   }
 
 }
