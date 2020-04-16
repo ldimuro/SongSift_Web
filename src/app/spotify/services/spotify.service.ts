@@ -5,6 +5,7 @@ import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { NowPlayingService } from 'src/app/nowPlaying/services/now-playing.service';
 import { Observable } from 'rxjs';
+import { Song } from '../models/song.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class SpotifyService {
   private accessToken: any;
   private refreshToken: any;
   private userTrackData: any;
+  private songs: Song[] = [];
 
   constructor(private http: HttpClient,
               private nowPlayingSvc: NowPlayingService) { }
@@ -116,23 +118,37 @@ export class SpotifyService {
       .subscribe(data => console.log(data));
   }
 
-  getUserTracks(nextUrl: string) {
+  getSongsFromSpotify(nextUrl: string) {
     const headers: HttpHeaders = new HttpHeaders({
       Authorization: 'Bearer ' + this.accessToken
     });
 
     return this.http.get(nextUrl, {headers}).subscribe(data => {
       this.userTrackData = data;
-      console.log(this.userTrackData);
-      console.log('# of tracks: ' + this.userTrackData.items.length);
 
       // Loop through array and grab data, then call endpoint again to reach next offset
       const length = this.userTrackData.items.length;
       for (let i = 0; i < length; i++) {
-        console.log(this.userTrackData.items[i].track.name);
+        const songName = this.userTrackData.items[i].track.name;
+        const songId = this.userTrackData.items[i].track.id;
+        const artist = this.userTrackData.items[i].track.artists[0].name;
+        const album = this.userTrackData.items[i].track.album.name;
+        const popularity = this.userTrackData.items[i].track.popularity;
+
+        const song: Song = new Song(songName, songId, artist, album, popularity);
+        this.songs.push(song);
       }
-      this.getUserTracks(this.userTrackData.next);
+      if (this.userTrackData.next !== null) {
+        this.getSongsFromSpotify(this.userTrackData.next);
+      } else {
+        console.log('Done');
+      }
     });
+  }
+
+  getAllSongs() {
+    // return this.songs.length;
+    console.log(this.songs);
   }
 
   getTopTracks() {

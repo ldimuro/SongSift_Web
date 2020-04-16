@@ -39,8 +39,12 @@ export class NowPlayingComponent implements OnInit {
     this.spotifySvc.getSong();
   }
 
-  getUsersTracks() {
-    this.spotifySvc.getUserTracks('https://api.spotify.com/v1/me/tracks?market=US&offset=0&limit=50');
+  getSongsFromSpotify() {
+    this.spotifySvc.getSongsFromSpotify('https://api.spotify.com/v1/me/tracks?market=US&offset=0&limit=50');
+  }
+
+  getAllSongs() {
+    this.spotifySvc.getAllSongs();
   }
 
   getTopTracks() {
