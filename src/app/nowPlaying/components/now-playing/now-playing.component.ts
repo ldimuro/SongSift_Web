@@ -23,9 +23,8 @@ export class NowPlayingComponent implements OnInit {
     console.log('CODE: ' + this.nowPlayingSvc.getCode());
 
     setTimeout(() => {
-      console.log('2 seconds later');
       this.getToken();
-    }, 2000);
+    }, 1000);
   }
 
   getToken() {

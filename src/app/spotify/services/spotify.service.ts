@@ -126,6 +126,7 @@ export class SpotifyService {
       console.log(this.userTrackData);
       console.log('# of tracks: ' + this.userTrackData.items.length);
 
+      // Loop through array and grab data, then call endpoint again to reach next offset
       const length = this.userTrackData.items.length;
       for (let i = 0; i < length; i++) {
         console.log(this.userTrackData.items[i].track.name);
@@ -143,8 +144,6 @@ export class SpotifyService {
 
     return this.http.get(url, {headers}).subscribe(data => {
         console.log(data);
-        // this.accessToken = data['access_token'];
-        // this.refreshToken = data['refresh_token'];
       });
   }
 
