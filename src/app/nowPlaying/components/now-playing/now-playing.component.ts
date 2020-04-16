@@ -23,20 +23,24 @@ export class NowPlayingComponent implements OnInit {
     console.log('CODE: ' + this.nowPlayingSvc.getCode());
 
     setTimeout(() => {
-      this.getToken();
+      this.requestToken();
     }, 1000);
+
+    setTimeout(() => {
+      this.getSongsFromSpotify();
+    }, 2000);
+
+    setTimeout(() => {
+      this.getAllSongData();
+    }, 7000);
+
+    setTimeout(() => {
+      this.mergeSongAndSongData();
+    }, 7500);
   }
 
-  getToken() {
-    this.spotifySvc.getToken();
-  }
-
-  getTrackInfo() {
-    this.spotifySvc.getTrackInfo();
-  }
-
-  getSong() {
-    this.spotifySvc.getSong();
+  requestToken() {
+    this.spotifySvc.requestToken();
   }
 
   getSongsFromSpotify() {
@@ -44,7 +48,16 @@ export class NowPlayingComponent implements OnInit {
   }
 
   getAllSongs() {
-    this.spotifySvc.getAllSongs();
+    const response = this.spotifySvc.getAllSongs();
+    console.log(response);
+  }
+
+  getAllSongData() {
+    const response = this.spotifySvc.getAllSongData();
+  }
+
+  mergeSongAndSongData() {
+    this.spotifySvc.mergeSongAndSongData();
   }
 
   getTopTracks() {

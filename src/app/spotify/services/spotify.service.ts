@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { NowPlayingService } from 'src/app/nowPlaying/services/now-playing.service';
 import { Observable } from 'rxjs';
 import { Song } from '../models/song.model';
+import { SongData } from '../models/songData.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,10 +22,12 @@ export class SpotifyService {
   private accessToken: any;
   private refreshToken: any;
   private userTrackData: any;
+  private userSongAnalysis: any;
   private songs: Song[] = [];
+  private songData: SongData[] = [];
 
   constructor(private http: HttpClient,
-              private nowPlayingSvc: NowPlayingService) { }
+    private nowPlayingSvc: NowPlayingService) { }
 
   // Get access token from Spotify to use API
   getAuth() {
@@ -48,21 +51,25 @@ export class SpotifyService {
     window.location.href = this.url;
   }
 
-  getToken() {
+  requestToken() {
     const tokenUrl = 'https://accounts.spotify.com/api/token';
 
-    const headers = { 'Authorization': 'Basic ' + btoa(this.clientId + ':' + this.clientSecret),
-                      'Content-Type': 'application/x-www-form-urlencoded'};
+    const headers = {
+      'Authorization': 'Basic ' + btoa(this.clientId + ':' + this.clientSecret),
+      'Content-Type': 'application/x-www-form-urlencoded'
+    };
 
-    const body = {grant_type: 'authorization_code',
-                  code: this.nowPlayingSvc.getCode(),
-                  redirect_uri: encodeURIComponent('http://localhost:4200/now-playing/')};
+    const body = {
+      grant_type: 'authorization_code',
+      code: this.nowPlayingSvc.getCode(),
+      redirect_uri: encodeURIComponent('http://localhost:4200/now-playing/')
+    };
 
     // tslint:disable-next-line:max-line-length
     const newBody = `grant_type=authorization_code&code=${this.nowPlayingSvc.getCode()}&redirect_uri=${encodeURIComponent('http://localhost:4200/now-playing/')}`;
 
 
-    return this.http.post(tokenUrl, newBody, {headers}).subscribe(data => {
+    return this.http.post(tokenUrl, newBody, { headers }).subscribe(data => {
       console.log(data);
       this.accessToken = data['access_token'];
       this.refreshToken = data['refresh_token'];
@@ -77,7 +84,7 @@ export class SpotifyService {
       Authorization: 'Bearer ' + this.accessToken
     });
 
-    return this.http.get(url + `search?q=weezer&type=artist&market=SV&offset=0&limit=20`, {headers})
+    return this.http.get(url + `search?q=weezer&type=artist&market=SV&offset=0&limit=20`, { headers })
       .subscribe(data => console.log(data));
   }
 
@@ -88,7 +95,7 @@ export class SpotifyService {
       Authorization: 'Bearer ' + this.accessToken
     });
 
-    return this.http.get(url + `search?q=weezer&type=album&market=SV&offset=0&limit=20`, {headers})
+    return this.http.get(url + `search?q=weezer&type=album&market=SV&offset=0&limit=20`, { headers })
       .subscribe(data => console.log(data));
   }
 
@@ -103,7 +110,7 @@ export class SpotifyService {
     // ID #2: Let It Happen
     // ID #3: To Build A Home
 
-    return this.http.get(url + `audio-features?ids=4m0Vgr48VFaMYw0Sp1ozJu,2X485T9Z5Ly0xyaghN73ed,3AqPL1n1wKc5DVFFnYuJhp`, {headers})
+    return this.http.get(url + `audio-features?ids=4m0Vgr48VFaMYw0Sp1ozJu,2X485T9Z5Ly0xyaghN73ed,3AqPL1n1wKc5DVFFnYuJhp`, { headers })
       .subscribe(data => console.log(data));
   }
 
@@ -114,7 +121,7 @@ export class SpotifyService {
       Authorization: 'Bearer ' + this.accessToken
     });
 
-    return this.http.get(url + `search?q=to%20build%20a%20home&type=track&market=US&offset=0&limit=20`, {headers})
+    return this.http.get(url + `search?q=to%20build%20a%20home&type=track&market=US&offset=0&limit=20`, { headers })
       .subscribe(data => console.log(data));
   }
 
@@ -123,8 +130,9 @@ export class SpotifyService {
       Authorization: 'Bearer ' + this.accessToken
     });
 
-    return this.http.get(nextUrl, {headers}).subscribe(data => {
+    return this.http.get(nextUrl, { headers }).subscribe(data => {
       this.userTrackData = data;
+      // console.log(this.userTrackData);
 
       // Loop through array and grab data, then call endpoint again to reach next offset
       const length = this.userTrackData.items.length;
@@ -136,19 +144,86 @@ export class SpotifyService {
         const popularity = this.userTrackData.items[i].track.popularity;
 
         const song: Song = new Song(songName, songId, artist, album, popularity);
+        // const songData: SongData = this.getSongData(songId);
+        // song.setSongData(songData);
+
         this.songs.push(song);
       }
       if (this.userTrackData.next !== null) {
         this.getSongsFromSpotify(this.userTrackData.next);
+        console.log(this.userTrackData.offset + '/' + this.userTrackData.total);
       } else {
-        console.log('Done');
+        console.log('Done getting songs');
+
+        let idStr = '';
+        let first = true;
+        for (let i = 0; i < this.songs.length; i++) {
+          if (first) {
+            idStr += this.songs[i].songId;
+            // console.log(i + 1 + '.\t' + this.songs[i].songName);
+            first = false;
+          } else if (i % 99 === 0) {
+            // console.log('============LIMIT REACHED============');
+            this.getSongData(idStr);
+
+            idStr = '';
+            first = true;
+            i--;
+          } else {
+            idStr += ',' + this.songs[i].songId;
+            // console.log(i + 1 + '.\t' + this.songs[i].songName);
+
+            if (i === this.songs.length - 1) {
+              console.log('END OF LIST');
+              this.getSongData(idStr);
+            }
+          }
+        }
       }
     });
   }
 
+  getSongData(ids: string) {
+    const url = `https://api.spotify.com/v1/audio-features?ids=${ids}`;
+    const headers: HttpHeaders = new HttpHeaders({
+      Authorization: 'Bearer ' + this.accessToken
+    });
+
+    let songData: SongData;
+    this.http.get(url, { headers }).subscribe(data => {
+      this.userSongAnalysis = data;
+      console.log(this.userSongAnalysis);
+
+      let tempo = 0;
+      let danceability = 0;
+      let happiness = 0;
+      let energy = 0;
+      for (let i = 0; i < this.userSongAnalysis.audio_features.length; i++) {
+        tempo = this.userSongAnalysis.audio_features[i].tempo;
+        danceability = this.userSongAnalysis.audio_features[i].danceability;
+        happiness = this.userSongAnalysis.audio_features[i].valence;
+        energy = this.userSongAnalysis.audio_features[i].energy;
+
+        songData = new SongData(tempo, danceability, happiness, energy);
+        this.songData.push(songData);
+      }
+    });
+  }
+
+  mergeSongAndSongData() {
+    for (let i = 0; i < this.songs.length; i++) {
+      this.songs[i].setSongData(this.songData[i]);
+    }
+  }
+
   getAllSongs() {
-    // return this.songs.length;
-    console.log(this.songs);
+    return this.songs;
+    // console.log(this.songs);
+  }
+
+  getAllSongData() {
+    // console.log(this.songData);
+    return this.songData;
   }
 
   getTopTracks() {
@@ -158,9 +233,9 @@ export class SpotifyService {
       Authorization: 'Bearer ' + this.accessToken
     });
 
-    return this.http.get(url, {headers}).subscribe(data => {
-        console.log(data);
-      });
+    return this.http.get(url, { headers }).subscribe(data => {
+      console.log(data);
+    });
   }
 
 
