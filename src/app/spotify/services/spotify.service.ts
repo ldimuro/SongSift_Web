@@ -19,6 +19,7 @@ export class SpotifyService {
 
   private accessToken: any;
   private refreshToken: any;
+  private userTrackData: any;
 
   constructor(private http: HttpClient,
               private nowPlayingSvc: NowPlayingService) { }
@@ -115,15 +116,22 @@ export class SpotifyService {
       .subscribe(data => console.log(data));
   }
 
-  getUserTracks() {
-    const url = 'https://api.spotify.com/v1/me/';
-
+  getUserTracks(nextUrl: string) {
     const headers: HttpHeaders = new HttpHeaders({
       Authorization: 'Bearer ' + this.accessToken
     });
 
-    return this.http.get(url + `tracks?market=US&offset=0&limit=50`, {headers})
-      .subscribe(data => console.log(data));
+    return this.http.get(nextUrl, {headers}).subscribe(data => {
+      this.userTrackData = data;
+      console.log(this.userTrackData);
+      console.log('# of tracks: ' + this.userTrackData.items.length);
+
+      const length = this.userTrackData.items.length;
+      for (let i = 0; i < length; i++) {
+        console.log(this.userTrackData.items[i].track.name);
+      }
+      this.getUserTracks(this.userTrackData.next);
+    });
   }
 
   getTopTracks() {
@@ -133,8 +141,11 @@ export class SpotifyService {
       Authorization: 'Bearer ' + this.accessToken
     });
 
-    return this.http.get(url, {headers})
-      .subscribe(data => console.log(data));
+    return this.http.get(url, {headers}).subscribe(data => {
+        console.log(data);
+        // this.accessToken = data['access_token'];
+        // this.refreshToken = data['refresh_token'];
+      });
   }
 
 

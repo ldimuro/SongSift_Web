@@ -21,6 +21,11 @@ export class NowPlayingComponent implements OnInit {
   ngOnInit() {
     this.nowPlayingSvc.parseCode();
     console.log('CODE: ' + this.nowPlayingSvc.getCode());
+
+    setTimeout(() => {
+      console.log('2 seconds later');
+      this.getToken();
+    }, 2000);
   }
 
   getToken() {
@@ -36,7 +41,7 @@ export class NowPlayingComponent implements OnInit {
   }
 
   getUsersTracks() {
-    this.spotifySvc.getUserTracks();
+    this.spotifySvc.getUserTracks('https://api.spotify.com/v1/me/tracks?market=US&offset=0&limit=50');
   }
 
   getTopTracks() {
