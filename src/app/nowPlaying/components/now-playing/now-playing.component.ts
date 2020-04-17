@@ -18,13 +18,14 @@ export class NowPlayingComponent implements OnInit {
   rowDataArray = [];
 
   columnDefs = [
-    { headerName: 'Name', field: 'name', sortable: true },
-    { headerName: 'Artist', field: 'artist', sortable: true },
-    { headerName: 'Tempo', field: 'tempo', sortable: true },
-    { headerName: 'Danceability', field: 'danceability', sortable: true },
-    { headerName: 'Happiness', field: 'happiness', sortable: true },
-    { headerName: 'Energy', field: 'energy', sortable: true },
-    { headerName: 'Loudness', field: 'loudness', sortable: true, }
+    { headerName: '', field: 'index', width: 75 },
+    { headerName: 'Name', field: 'name', width: 300, sortable: true },
+    { headerName: 'Artist', field: 'artist', width: 300, sortable: true },
+    { headerName: 'Tempo', field: 'tempo', width: 150, sortable: true },
+    { headerName: 'Danceability', field: 'danceability', width: 150, sortable: true },
+    { headerName: 'Happiness', field: 'happiness', width: 150, sortable: true },
+    { headerName: 'Energy', field: 'energy', width: 150, sortable: true },
+    { headerName: 'Loudness', field: 'loudness', width: 150, sortable: true, }
   ];
 
   rowData: any;
@@ -47,15 +48,15 @@ export class NowPlayingComponent implements OnInit {
 
     setTimeout(() => {
       this.getAllSongData();
-    }, 8000);
+    }, 10000);
 
     setTimeout(() => {
       this.mergeSongAndSongData();
-    }, 9000);
+    }, 11000);
 
     setTimeout(() => {
       this.getAllSongs();
-    }, 10000);
+    }, 12000);
   }
 
   requestToken() {
@@ -72,6 +73,7 @@ export class NowPlayingComponent implements OnInit {
 
     for (let i = 0; i < this.songs.length; i++) {
       const x = {
+        index: i + 1 + '.',
         name: this.songs[i].songName,
         artist: this.songs[i].artist,
         tempo: this.songs[i].data.tempo,
