@@ -3,6 +3,7 @@ import { HomeComponent } from 'src/app/home/components/home/home.component';
 import { NowPlayingService } from '../../services/now-playing.service';
 import { Router } from '@angular/router';
 import { SpotifyService } from 'src/app/spotify/services/spotify.service';
+import { Song } from 'src/app/spotify/models/song.model';
 
 @Component({
   selector: 'app-now-playing',
@@ -13,6 +14,7 @@ export class NowPlayingComponent implements OnInit {
 
   code: string;
   token: string;
+  songs: Song[] = [];
 
   constructor(private nowPlayingSvc: NowPlayingService,
               private spotifySvc: SpotifyService,
@@ -49,7 +51,8 @@ export class NowPlayingComponent implements OnInit {
 
   getAllSongs() {
     const response = this.spotifySvc.getAllSongs();
-    console.log(response);
+    this.songs = response;
+    // console.log(response);
   }
 
   getAllSongData() {

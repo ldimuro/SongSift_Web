@@ -1,7 +1,9 @@
 <p>now-playing works!</p>
 <button (click)="backToHome()">Back</button>
-<button (click)="getSongsFromSpotify()">Get Saved Songs from Spotfy</button>
 <button (click)="getAllSongs()">Get Song Array</button>
-<button (click)="getTopTracks()">Get Top Tracks</button>
-<button (click)="getTrackData()">Get Track Info</button>
-
+<br />
+<div class='songList'>
+    <li *ngFor="let song of songs; let i = index">
+        {{i+1 + '.'}} {{'\t\t\t' + song.songName + ' – ' + song.artist}}
+    </li>
+</div>
