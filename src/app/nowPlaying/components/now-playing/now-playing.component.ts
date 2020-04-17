@@ -15,10 +15,24 @@ export class NowPlayingComponent implements OnInit {
   code: string;
   token: string;
   songs: Song[] = [];
+  rowDataArray = [];
+
+  columnDefs = [
+    { headerName: 'Name', field: 'name', sortable: true },
+    { headerName: 'Artist', field: 'artist', sortable: true },
+    { headerName: 'Tempo', field: 'tempo', sortable: true },
+    { headerName: 'Danceability', field: 'danceability', sortable: true },
+    { headerName: 'Happiness', field: 'happiness', sortable: true },
+    { headerName: 'Energy', field: 'energy', sortable: true }
+  ];
+
+  rowData = [
+    { name: 'test', artist: 'testArtist', tempo: 0, danceability: 0, happiness: 0, energy: 0 }
+  ];
 
   constructor(private nowPlayingSvc: NowPlayingService,
-              private spotifySvc: SpotifyService,
-              private router: Router) { }
+    private spotifySvc: SpotifyService,
+    private router: Router) { }
 
   ngOnInit() {
     this.nowPlayingSvc.parseCode();
@@ -39,6 +53,10 @@ export class NowPlayingComponent implements OnInit {
     setTimeout(() => {
       this.mergeSongAndSongData();
     }, 9000);
+
+    setTimeout(() => {
+      this.getAllSongs();
+    }, 10000);
   }
 
   requestToken() {
@@ -52,6 +70,23 @@ export class NowPlayingComponent implements OnInit {
   getAllSongs() {
     const response = this.spotifySvc.getAllSongs();
     this.songs = response;
+    let totalTempo = 0;
+
+    for (let i = 0; i < this.songs.length; i++) {
+      const x = {
+        name: this.songs[i].songName, artist: this.songs[i].artist,
+        tempo: this.songs[i].data.tempo, danceability: this.songs[i].data.danceability,
+        happiness: this.songs[i].data.happiness, energy: this.songs[i].data.energy
+      };
+
+      totalTempo += this.songs[i].data.danceability;
+
+      this.rowDataArray.push(x);
+    }
+    console.log('Finished formatting response');
+    console.log('Average Dance: ' + totalTempo / this.songs.length);
+
+    this.rowData = this.rowDataArray;
     // console.log(response);
   }
 
@@ -72,6 +107,6 @@ export class NowPlayingComponent implements OnInit {
   }
 
   backToHome() {
-    this.router.navigate(['/home'], {replaceUrl: true});
+    this.router.navigate(['/home'], { replaceUrl: true });
   }
 }
