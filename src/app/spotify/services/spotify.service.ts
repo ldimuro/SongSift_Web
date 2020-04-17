@@ -126,12 +126,12 @@ export class SpotifyService {
       .subscribe(data => console.log(data));
   }
 
-  getSongsFromSpotify(nextUrl: string) {
+  async getSongsFromSpotify(nextUrl: string) {
     const headers: HttpHeaders = new HttpHeaders({
       Authorization: 'Bearer ' + this.accessToken
     });
 
-    return this.http.get(nextUrl, { headers }).subscribe(data => {
+    return this.http.get(nextUrl, { headers }).subscribe(async data => {
       this.userTrackData = data;
       // console.log(this.userTrackData);
 
@@ -165,8 +165,11 @@ export class SpotifyService {
             // console.log(i + 1 + '.\t' + this.songs[i].songName);
             first = false;
           } else if (i % 99 === 0) {
-            // console.log('============LIMIT REACHED============');
-            this.getSongData(idStr);
+            // this.getSongData(idStr);
+
+            const response = await this.testGetSongData(idStr);
+            await this.parseSongData(response);
+            console.log(response);
 
             idStr = '';
             first = true;
@@ -179,14 +182,47 @@ export class SpotifyService {
               console.log('END OF LIST');
               // this.getSongData(idStr);
 
-              setTimeout(() => {
-                this.getSongData(idStr);
-              }, 1500);
+              // setTimeout(() => {
+              //   this.getSongData(idStr);
+              // }, 1500);
+
+              const response = await this.testGetSongData(idStr);
+              await this.parseSongData(response);
+              console.log(response);
             }
           }
         }
       }
     });
+  }
+
+  async testGetSongData(ids: string) {
+    const url = `https://api.spotify.com/v1/audio-features?ids=${ids}`;
+    const headers: HttpHeaders = new HttpHeaders({
+      Authorization: 'Bearer ' + this.accessToken
+    });
+
+    const response = await this.http.get(url, { headers }).toPromise();
+    return response;
+  }
+
+  async parseSongData(data: any) {
+    let songData: SongData;
+    let tempo = 0;
+    let danceability = 0;
+    let happiness = 0;
+    let energy = 0;
+    let loudness = 0;
+    for (let i = 0; i < data.audio_features.length; i++) {
+      tempo = data.audio_features[i].tempo;
+      danceability = data.audio_features[i].danceability;
+      happiness = data.audio_features[i].valence;
+      energy = data.audio_features[i].energy;
+      loudness = data.audio_features[i].loudness;
+
+      songData = new SongData(tempo, danceability, happiness, energy, loudness);
+      this.songData.push(songData);
+    }
   }
 
   getSongData(ids: string) {
