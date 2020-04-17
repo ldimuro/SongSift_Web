@@ -23,16 +23,15 @@ export class NowPlayingComponent implements OnInit {
     { headerName: 'Tempo', field: 'tempo', sortable: true },
     { headerName: 'Danceability', field: 'danceability', sortable: true },
     { headerName: 'Happiness', field: 'happiness', sortable: true },
-    { headerName: 'Energy', field: 'energy', sortable: true }
+    { headerName: 'Energy', field: 'energy', sortable: true },
+    { headerName: 'Loudness', field: 'loudness', sortable: true, }
   ];
 
-  rowData = [
-    { name: 'test', artist: 'testArtist', tempo: 0, danceability: 0, happiness: 0, energy: 0 }
-  ];
+  rowData: any;
 
   constructor(private nowPlayingSvc: NowPlayingService,
-    private spotifySvc: SpotifyService,
-    private router: Router) { }
+              private spotifySvc: SpotifyService,
+              private router: Router) { }
 
   ngOnInit() {
     this.nowPlayingSvc.parseCode();
@@ -70,21 +69,21 @@ export class NowPlayingComponent implements OnInit {
   getAllSongs() {
     const response = this.spotifySvc.getAllSongs();
     this.songs = response;
-    let totalTempo = 0;
 
     for (let i = 0; i < this.songs.length; i++) {
       const x = {
-        name: this.songs[i].songName, artist: this.songs[i].artist,
-        tempo: this.songs[i].data.tempo, danceability: this.songs[i].data.danceability,
-        happiness: this.songs[i].data.happiness, energy: this.songs[i].data.energy
+        name: this.songs[i].songName,
+        artist: this.songs[i].artist,
+        tempo: this.songs[i].data.tempo,
+        danceability: this.songs[i].data.danceability,
+        happiness: this.songs[i].data.happiness,
+        energy: this.songs[i].data.energy,
+        loudness: this.songs[i].data.loudness
       };
-
-      totalTempo += this.songs[i].data.danceability;
 
       this.rowDataArray.push(x);
     }
     console.log('Finished formatting response');
-    console.log('Average Dance: ' + totalTempo / this.songs.length);
 
     this.rowData = this.rowDataArray;
     // console.log(response);

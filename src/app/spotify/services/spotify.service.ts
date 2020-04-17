@@ -203,13 +203,15 @@ export class SpotifyService {
       let danceability = 0;
       let happiness = 0;
       let energy = 0;
+      let loudness = 0;
       for (let i = 0; i < this.userSongAnalysis.audio_features.length; i++) {
         tempo = this.userSongAnalysis.audio_features[i].tempo;
         danceability = this.userSongAnalysis.audio_features[i].danceability;
         happiness = this.userSongAnalysis.audio_features[i].valence;
         energy = this.userSongAnalysis.audio_features[i].energy;
+        loudness = this.userSongAnalysis.audio_features[i].loudness;
 
-        songData = new SongData(tempo, danceability, happiness, energy);
+        songData = new SongData(tempo, danceability, happiness, energy, loudness);
         this.songData.push(songData);
       }
     });
