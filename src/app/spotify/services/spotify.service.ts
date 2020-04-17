@@ -145,6 +145,7 @@ export class SpotifyService {
         const popularity = this.userTrackData.items[i].track.popularity;
 
         const song: Song = new Song(songName, songId, artist, album, popularity);
+
         // const songData: SongData = this.getSongData(songId);
         // song.setSongData(songData);
 
