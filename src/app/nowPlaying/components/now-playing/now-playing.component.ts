@@ -32,11 +32,11 @@ export class NowPlayingComponent implements OnInit {
 
     setTimeout(() => {
       this.getAllSongData();
-    }, 7000);
+    }, 8000);
 
     setTimeout(() => {
       this.mergeSongAndSongData();
-    }, 7500);
+    }, 9000);
   }
 
   requestToken() {
@@ -62,6 +62,10 @@ export class NowPlayingComponent implements OnInit {
 
   getTopTracks() {
     this.spotifySvc.getTopTracks();
+  }
+
+  getTrackData() {
+    this.spotifySvc.getTrackInfo();
   }
 
   backToHome() {

@@ -109,8 +109,9 @@ export class SpotifyService {
     // ID #1: Bodysnatchers
     // ID #2: Let It Happen
     // ID #3: To Build A Home
+    // ID #4: Young Lion
 
-    return this.http.get(url + `audio-features?ids=4m0Vgr48VFaMYw0Sp1ozJu,2X485T9Z5Ly0xyaghN73ed,3AqPL1n1wKc5DVFFnYuJhp`, { headers })
+    return this.http.get(url + `audio-features?ids=4m0Vgr48VFaMYw0Sp1ozJu,2X485T9Z5Ly0xyaghN73ed,3AqPL1n1wKc5DVFFnYuJhp,570ocPyYy6lgJPnPAo66cZ`, { headers })
       .subscribe(data => console.log(data));
   }
 
@@ -175,7 +176,11 @@ export class SpotifyService {
 
             if (i === this.songs.length - 1) {
               console.log('END OF LIST');
-              this.getSongData(idStr);
+              // this.getSongData(idStr);
+
+              setTimeout(() => {
+                this.getSongData(idStr);
+              }, 1500);
             }
           }
         }
@@ -214,6 +219,7 @@ export class SpotifyService {
     for (let i = 0; i < this.songs.length; i++) {
       this.songs[i].setSongData(this.songData[i]);
     }
+    console.log('Finished merging');
   }
 
   getAllSongs() {
@@ -222,7 +228,7 @@ export class SpotifyService {
   }
 
   getAllSongData() {
-    // console.log(this.songData);
+    console.log('Sent song data');
     return this.songData;
   }
 
