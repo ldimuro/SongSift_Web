@@ -17,7 +17,7 @@ export class SpotifyService {
   private body: any;
   private url = 'https://accounts.spotify.com/authorize?client_id=30a58f631e5d4a0d8331fc0d29e052f9' +
     '&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A4200%2Fnow-playing%2F&scope=user-read-private%20' +
-    'user-library-read%20user-top-read';
+    'user-library-read%20user-top-read%20playlist-modify-private%20playlist-modify-public';
 
   private accessToken: any;
   private refreshToken: any;
@@ -74,7 +74,18 @@ export class SpotifyService {
       this.accessToken = data['access_token'];
       this.refreshToken = data['refresh_token'];
     });
+  }
 
+  getUserId() {
+    const url = 'https://accounts.spotify.com/v1/me';
+
+    const headers: HttpHeaders = new HttpHeaders({
+      Authorization: 'Bearer ' + this.accessToken
+    });
+
+    return this.http.get(url, { headers }).subscribe(data => {
+      console.log('USER ID: ' + data['id']);
+    });
   }
 
   getArtist() {
@@ -271,6 +282,26 @@ export class SpotifyService {
     console.log('Sent song data');
     return this.songData;
   }
+
+  createPlaylist(playlistName: string) {
+    const playlistUrl = 'https://api.spotify.com/v1/users/ldimuro/playlists';
+
+    const headers: HttpHeaders = new HttpHeaders({
+      Authorization: 'Bearer ' + this.accessToken,
+      'Content-Type': 'application/json'
+    });
+
+    const body = {
+      name: playlistName,
+      description: 'Playlist generated using Song Sift'
+    };
+
+    return this.http.post(playlistUrl, body , {headers})
+      .subscribe(data => console.log(data));
+  }
+
+
+
 
   getTopTracks() {
     const url = 'https://api.spotify.com/v1/me/top/tracks';

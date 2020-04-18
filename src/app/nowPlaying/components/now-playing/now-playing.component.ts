@@ -48,6 +48,10 @@ export class NowPlayingComponent implements OnInit {
       this.requestToken();
     }, 1000);
 
+    // setTimeout(() => {
+    //   this.spotifySvc.getUserId();
+    // }, 1500);
+
     setTimeout(() => {
       this.getSongsFromSpotify();
     }, 2000);
@@ -92,10 +96,12 @@ export class NowPlayingComponent implements OnInit {
 
       this.rowDataArray.push(x);
     }
+
+    const filteredArray = this.rowDataArray.filter(s => s.energy >= 0.9 && s.happiness >= 0.7);
     console.log('Finished formatting response');
 
-    this.rowData = this.rowDataArray;
-    // console.log(response);
+    // this.rowData = this.rowDataArray;
+    this.rowData = filteredArray;
   }
 
   getAllSongData() {
@@ -114,6 +120,18 @@ export class NowPlayingComponent implements OnInit {
     this.spotifySvc.getTrackInfo();
   }
 
+  getUserId() {
+    this.spotifySvc.getUserId();
+  }
+
+  createPlaylist() {
+    let result = window.prompt('Enter name for playlist');
+    if (result === '') {
+      result = 'Song Sift Playlist';
+    }
+    this.spotifySvc.createPlaylist(result);
+  }
+
   backToHome() {
     this.router.navigate(['/home'], { replaceUrl: true });
   }
@@ -121,7 +139,6 @@ export class NowPlayingComponent implements OnInit {
   onSelectionChanged() {
     const selectedRows = this.gridApi.getSelectedRows();
     const url = selectedRows[0].previewUrl;
-    console.log(url);
 
     this.audio.src = url;
     this.audio.play();

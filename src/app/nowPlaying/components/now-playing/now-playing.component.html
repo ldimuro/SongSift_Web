@@ -1,11 +1,7 @@
 <p>now-playing works!</p>
 <button (click)="backToHome()">Back</button>
+<button (click)="createPlaylist()">Create Playlist</button>
 <br />
-<!-- <div class='songList'>
-    <li *ngFor="let song of songs; let i = index">
-        {{i+1 + '.'}} {{'\t\t\t' + song.songName + ' – ' + song.artist}}
-    </li>
-</div> -->
 <ag-grid-angular
     style="width: 1425px; height: 625px;"
     class="ag-theme-alpine"
@@ -15,6 +11,5 @@
     (selectionChanged)="onSelectionChanged()"
     (gridReady)="onGridReady($event)"
     [suppressCellSelection]=true
-
     >
 </ag-grid-angular>
