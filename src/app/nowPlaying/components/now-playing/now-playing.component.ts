@@ -17,10 +17,16 @@ export class NowPlayingComponent implements OnInit {
   songs: Song[] = [];
   rowDataArray = [];
 
+  private gridApi;
+  private gridColumnApi;
+  rowSelection = 'single';
+
+  audio = new Audio();
+
   columnDefs = [
     { headerName: '', field: 'index', width: 75 },
     { headerName: 'Name', field: 'name', width: 300, sortable: true },
-    { headerName: 'Artist', field: 'artist', width: 300, sortable: true },
+    { headerName: 'Artist', field: 'artist', width: 300, sortable: true, filter: true  },
     { headerName: 'Tempo', field: 'tempo', width: 150, sortable: true },
     { headerName: 'Danceability', field: 'danceability', width: 150, sortable: true },
     { headerName: 'Happiness', field: 'happiness', width: 150, sortable: true },
@@ -73,14 +79,15 @@ export class NowPlayingComponent implements OnInit {
 
     for (let i = 0; i < this.songs.length; i++) {
       const x = {
-        index: i + 1 + '.',
+        index: i + 1,
         name: this.songs[i].songName,
         artist: this.songs[i].artist,
         tempo: this.songs[i].data.tempo,
         danceability: this.songs[i].data.danceability,
         happiness: this.songs[i].data.happiness,
         energy: this.songs[i].data.energy,
-        loudness: this.songs[i].data.loudness
+        loudness: this.songs[i].data.loudness,
+        previewUrl: this.songs[i].previewUrl
       };
 
       this.rowDataArray.push(x);
@@ -110,4 +117,19 @@ export class NowPlayingComponent implements OnInit {
   backToHome() {
     this.router.navigate(['/home'], { replaceUrl: true });
   }
+
+  onSelectionChanged() {
+    const selectedRows = this.gridApi.getSelectedRows();
+    const url = selectedRows[0].previewUrl;
+    console.log(url);
+
+    this.audio.src = url;
+    this.audio.play();
+  }
+
+  onGridReady(params) {
+    this.gridApi = params.api;
+    this.gridColumnApi = params.columnApi;
+  }
+
 }

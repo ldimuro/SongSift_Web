@@ -27,7 +27,7 @@ export class SpotifyService {
   private songData: SongData[] = [];
 
   constructor(private http: HttpClient,
-    private nowPlayingSvc: NowPlayingService) { }
+              private nowPlayingSvc: NowPlayingService) { }
 
   // Get access token from Spotify to use API
   getAuth() {
@@ -143,8 +143,9 @@ export class SpotifyService {
         const artist = this.userTrackData.items[i].track.artists[0].name;
         const album = this.userTrackData.items[i].track.album.name;
         const popularity = this.userTrackData.items[i].track.popularity;
+        const previewUrl = this.userTrackData.items[i].track.preview_url;
 
-        const song: Song = new Song(songName, songId, artist, album, popularity);
+        const song: Song = new Song(songName, songId, artist, album, popularity, previewUrl);
 
         // const songData: SongData = this.getSongData(songId);
         // song.setSongData(songData);
