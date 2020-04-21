@@ -88,54 +88,13 @@ export class SpotifyService {
     });
   }
 
-  getArtist() {
-    const url = 'https://api.spotify.com/v1/';
+  getArtist() { }
 
-    const headers: HttpHeaders = new HttpHeaders({
-      Authorization: 'Bearer ' + this.accessToken
-    });
+  getAlbum() { }
 
-    return this.http.get(url + `search?q=weezer&type=artist&market=SV&offset=0&limit=20`, { headers })
-      .subscribe(data => console.log(data));
-  }
+  getTrackInfo() { }
 
-  getAlbum() {
-    const url = 'https://api.spotify.com/v1/';
-
-    const headers: HttpHeaders = new HttpHeaders({
-      Authorization: 'Bearer ' + this.accessToken
-    });
-
-    return this.http.get(url + `search?q=weezer&type=album&market=SV&offset=0&limit=20`, { headers })
-      .subscribe(data => console.log(data));
-  }
-
-  getTrackInfo() {
-    const url = 'https://api.spotify.com/v1/';
-
-    const headers: HttpHeaders = new HttpHeaders({
-      Authorization: 'Bearer ' + this.accessToken
-    });
-
-    // ID #1: Bodysnatchers
-    // ID #2: Let It Happen
-    // ID #3: To Build A Home
-    // ID #4: Young Lion
-
-    return this.http.get(url + `audio-features?ids=4m0Vgr48VFaMYw0Sp1ozJu,2X485T9Z5Ly0xyaghN73ed,3AqPL1n1wKc5DVFFnYuJhp,570ocPyYy6lgJPnPAo66cZ`, { headers })
-      .subscribe(data => console.log(data));
-  }
-
-  getSong() {
-    const url = 'https://api.spotify.com/v1/';
-
-    const headers: HttpHeaders = new HttpHeaders({
-      Authorization: 'Bearer ' + this.accessToken
-    });
-
-    return this.http.get(url + `search?q=to%20build%20a%20home&type=track&market=US&offset=0&limit=20`, { headers })
-      .subscribe(data => console.log(data));
-  }
+  getSong() { }
 
   async getSongsFromSpotify(nextUrl: string) {
     const headers: HttpHeaders = new HttpHeaders({
@@ -158,9 +117,6 @@ export class SpotifyService {
 
         const song: Song = new Song(songName, songId, artist, album, popularity, previewUrl);
 
-        // const songData: SongData = this.getSongData(songId);
-        // song.setSongData(songData);
-
         this.songs.push(song);
       }
       if (this.userTrackData.next !== null) {
@@ -174,12 +130,9 @@ export class SpotifyService {
         for (let i = 0; i < this.songs.length; i++) {
           if (first) {
             idStr += this.songs[i].songId;
-            // console.log(i + 1 + '.\t' + this.songs[i].songName);
             first = false;
           } else if (i % 99 === 0) {
-            // this.getSongData(idStr);
-
-            const response = await this.testGetSongData(idStr);
+            const response = await this.getSongData(idStr);
             await this.parseSongData(response);
             console.log(response);
 
@@ -188,19 +141,12 @@ export class SpotifyService {
             i--;
           } else {
             idStr += ',' + this.songs[i].songId;
-            // console.log(i + 1 + '.\t' + this.songs[i].songName);
 
             if (i === this.songs.length - 1) {
-              console.log('END OF LIST');
-              // this.getSongData(idStr);
-
-              // setTimeout(() => {
-              //   this.getSongData(idStr);
-              // }, 1500);
-
-              const response = await this.testGetSongData(idStr);
+              const response = await this.getSongData(idStr);
               await this.parseSongData(response);
               console.log(response);
+              console.log('END OF LIST');
             }
           }
         }
@@ -208,7 +154,7 @@ export class SpotifyService {
     });
   }
 
-  async testGetSongData(ids: string) {
+  async getSongData(ids: string) {
     const url = `https://api.spotify.com/v1/audio-features?ids=${ids}`;
     const headers: HttpHeaders = new HttpHeaders({
       Authorization: 'Bearer ' + this.accessToken
@@ -235,35 +181,6 @@ export class SpotifyService {
       songData = new SongData(tempo, danceability, happiness, energy, loudness);
       this.songData.push(songData);
     }
-  }
-
-  getSongData(ids: string) {
-    const url = `https://api.spotify.com/v1/audio-features?ids=${ids}`;
-    const headers: HttpHeaders = new HttpHeaders({
-      Authorization: 'Bearer ' + this.accessToken
-    });
-
-    let songData: SongData;
-    this.http.get(url, { headers }).subscribe(data => {
-      this.userSongAnalysis = data;
-      console.log(this.userSongAnalysis);
-
-      let tempo = 0;
-      let danceability = 0;
-      let happiness = 0;
-      let energy = 0;
-      let loudness = 0;
-      for (let i = 0; i < this.userSongAnalysis.audio_features.length; i++) {
-        tempo = this.userSongAnalysis.audio_features[i].tempo;
-        danceability = this.userSongAnalysis.audio_features[i].danceability;
-        happiness = this.userSongAnalysis.audio_features[i].valence;
-        energy = this.userSongAnalysis.audio_features[i].energy;
-        loudness = this.userSongAnalysis.audio_features[i].loudness;
-
-        songData = new SongData(tempo, danceability, happiness, energy, loudness);
-        this.songData.push(songData);
-      }
-    });
   }
 
   mergeSongAndSongData() {

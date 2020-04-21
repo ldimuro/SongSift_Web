@@ -24,14 +24,69 @@ export class NowPlayingComponent implements OnInit {
   audio = new Audio();
 
   columnDefs = [
-    { headerName: '', field: 'index', width: 75 },
-    { headerName: 'Name', field: 'name', width: 300, sortable: true },
-    { headerName: 'Artist', field: 'artist', width: 300, sortable: true, filter: true  },
-    { headerName: 'Tempo', field: 'tempo', width: 150, sortable: true },
-    { headerName: 'Danceability', field: 'danceability', width: 150, sortable: true },
-    { headerName: 'Happiness', field: 'happiness', width: 150, sortable: true },
-    { headerName: 'Energy', field: 'energy', width: 150, sortable: true },
-    { headerName: 'Loudness', field: 'loudness', width: 150, sortable: true, }
+    {
+      headerName: 'Name',
+      field: 'name',
+      width: 300,
+      sortable: true,
+      filter: true,
+      filterParams: {
+        filterOptions: ['contains']
+      }
+    },
+    {
+      headerName: 'Artist',
+      field: 'artist',
+      width: 300,
+      sortable: true,
+      filter: true,
+      filterParams: {
+        filterOptions: ['contains']
+      }
+    },
+    {
+      headerName: 'Danceability',
+      field: 'danceability',
+      width: 150, sortable: true,
+      filter: 'agNumberColumnFilter',
+      filterParams: {
+        suppressAndOrCondition: true,
+        filterOptions: ['greaterThan', 'lessThan']
+      }
+    },
+    {
+      headerName: 'Happiness',
+      field: 'happiness',
+      width: 150,
+      sortable: true,
+      filter: 'agNumberColumnFilter',
+      filterParams: {
+        suppressAndOrCondition: true,
+        filterOptions: ['greaterThan', 'lessThan']
+      }
+    },
+    {
+      headerName: 'Energy',
+      field: 'energy',
+      width: 150,
+      sortable: true,
+      filter: 'agNumberColumnFilter',
+      filterParams: {
+        suppressAndOrCondition: true,
+        filterOptions: ['greaterThan', 'lessThan']
+      }
+    },
+    {
+      headerName: 'Loudness',
+      field: 'loudness',
+      width: 150,
+      sortable: true,
+      filter: 'agNumberColumnFilter',
+      filterParams: {
+        suppressAndOrCondition: true,
+        filterOptions: ['greaterThan', 'lessThan']
+      }
+    }
   ];
 
   rowData: any;
@@ -83,10 +138,8 @@ export class NowPlayingComponent implements OnInit {
 
     for (let i = 0; i < this.songs.length; i++) {
       const x = {
-        index: i + 1,
         name: this.songs[i].songName,
         artist: this.songs[i].artist,
-        tempo: this.songs[i].data.tempo,
         danceability: this.songs[i].data.danceability,
         happiness: this.songs[i].data.happiness,
         energy: this.songs[i].data.energy,
@@ -97,11 +150,35 @@ export class NowPlayingComponent implements OnInit {
       this.rowDataArray.push(x);
     }
 
-    const filteredArray = this.rowDataArray.filter(s => s.energy >= 0.9 && s.happiness >= 0.7);
-    console.log('Finished formatting response');
+    // +energy && +happiness    = YES (71 songs)
+    // +energy && -happiness    = NO
+    // +energy && +danceability = NO
+    // +energy && -danceability = NO
+    // +energy && +loudness     = YES (70 songs)
+    // +energy && -loudness     = NO
+    // -energy && +happiness    = NO
+    // -energy && -happiness    = YES (44 songs)
+    // -energy && +danceability = MAYBE (6 songs)
 
-    // this.rowData = this.rowDataArray;
-    this.rowData = filteredArray;
+
+    let highEnergy = 0.85;
+    let lowEnergy = 0.3;
+
+    let highHappiness = 0.75;
+    let lowHappiness = 0.3;
+
+    // NO NEED FOR LOW DANCEABILITY
+    let highDance = 0.8;
+
+    let highVolume = -3.5;
+    let lowVolume = -10;
+
+    const filteredArray = this.rowDataArray.filter(s => s.energy >= highEnergy && s.loudness >= highVolume);
+    // const filteredArray = this.rowDataArray.filter(s => s.energy <= lowEnergy && s.danceability >= highDance);
+    console.log('Finished formatting response: ' + filteredArray.length + ' songs');
+
+    this.rowData = this.rowDataArray;
+    // this.rowData = filteredArray;
   }
 
   getAllSongData() {
@@ -122,6 +199,10 @@ export class NowPlayingComponent implements OnInit {
 
   getUserId() {
     this.spotifySvc.getUserId();
+  }
+
+  getFilterModel() {
+    console.log(this.gridApi.getFilterModel());
   }
 
   createPlaylist() {
