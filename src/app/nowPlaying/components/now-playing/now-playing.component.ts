@@ -4,6 +4,7 @@ import { NowPlayingService } from '../../services/now-playing.service';
 import { Router } from '@angular/router';
 import { SpotifyService } from 'src/app/spotify/services/spotify.service';
 import { Song } from 'src/app/spotify/models/song.model';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-now-playing',
@@ -31,7 +32,8 @@ export class NowPlayingComponent implements OnInit {
       sortable: true,
       filter: true,
       filterParams: {
-        filterOptions: ['contains']
+        suppressAndOrCondition: true,
+        filterOptions: ['contains', 'notContains']
       }
     },
     {
@@ -41,7 +43,8 @@ export class NowPlayingComponent implements OnInit {
       sortable: true,
       filter: true,
       filterParams: {
-        filterOptions: ['contains']
+        suppressAndOrCondition: true,
+        filterOptions: ['contains', 'notContains']
       }
     },
     {
@@ -203,6 +206,98 @@ export class NowPlayingComponent implements OnInit {
 
   getFilterModel() {
     console.log(this.gridApi.getFilterModel());
+    const filterModel = this.gridApi.getFilterModel();
+    let filteredArray = this.rowDataArray;
+
+    if (filterModel.loudness) {
+      console.log('has loudness');
+      if (filterModel.loudness.type === 'greaterThan') {
+        filteredArray = filteredArray.filter(s => s.loudness > filterModel.loudness.filter);
+        console.log('Filter out songs with loudness > ' + filterModel.loudness.filter);
+      }
+      else if (filterModel.loudness.type === 'lessThan') {
+        filteredArray = filteredArray.filter(s => s.loudness < filterModel.loudness.filter);
+        console.log('Filter out songs with loudness < ' + filterModel.loudness.filter);
+      }
+    }
+    if (filterModel.energy) {
+      console.log('has energy');
+      if (filterModel.energy.type === 'greaterThan') {
+        filteredArray = filteredArray.filter(s => s.energy > filterModel.energy.filter);
+        console.log('Filter out songs with energy > ' + filterModel.energy.filter);
+      }
+      else if (filterModel.energy.type === 'lessThan') {
+        filteredArray = filteredArray.filter(s => s.energy < filterModel.energy.filter);
+        console.log('Filter out songs with energy < ' + filterModel.energy.filter);
+      }
+    }
+    if (filterModel.happiness) {
+      console.log('has happiness');
+      if (filterModel.happiness.type === 'greaterThan') {
+        filteredArray = filteredArray.filter(s => s.happiness > filterModel.happiness.filter);
+        console.log('Filter out songs with happiness > ' + filterModel.happiness.filter);
+      }
+      else if (filterModel.happiness.type === 'lessThan') {
+        filteredArray = filteredArray.filter(s => s.happiness < filterModel.happiness.filter);
+        console.log('Filter out songs with happiness < ' + filterModel.happiness.filter);
+      }
+    }
+    if (filterModel.danceability) {
+      console.log('has danceability');
+      if (filterModel.danceability.type === 'greaterThan') {
+        filteredArray = filteredArray.filter(s => s.danceability > filterModel.danceability.filter);
+        console.log('Filter out songs with danceability > ' + filterModel.danceability.filter);
+      }
+      else if (filterModel.danceability.type === 'lessThan') {
+        filteredArray = filteredArray.filter(s => s.danceability < filterModel.danceability.filter);
+        console.log('Filter out songs with danceability < ' + filterModel.danceability.filter);
+      }
+    }
+    if (filterModel.artist) {
+      console.log('has artist');
+      if (filterModel.artist.type === 'contains') {
+        const filterKeyword: string = filterModel.artist.filter.toString().toLowerCase();
+        filteredArray = filteredArray.filter(s => {
+          const temp = s.artist.toString();
+          const artistStr: string = temp.toLowerCase();
+          return artistStr.includes(filterKeyword);
+        });
+        console.log('Filter out songs that contain: ' + filterKeyword);
+      }
+      else if (filterModel.artist.type === 'notContains') {
+        const filterKeyword: string = filterModel.artist.filter.toString().toLowerCase();
+        filteredArray = filteredArray.filter(s => {
+          const temp = s.artist.toString();
+          const artistStr: string = temp.toLowerCase();
+          return !artistStr.includes(filterKeyword);
+        });
+        console.log('Filter out songs that dont contain: ' + filterModel.artist.filter);
+      }
+    }
+    if (filterModel.name) {
+      console.log('has name');
+      if (filterModel.name.type === 'contains') {
+        const filterKeyword: string = filterModel.name.filter.toString().toLowerCase();
+        filteredArray = filteredArray.filter(s => {
+          const temp = s.name.toString();
+          const nameStr: string = temp.toLowerCase();
+          return nameStr.includes(filterKeyword);
+        });
+        console.log('Filter out songs that contain: ' + filterModel.name.filter);
+      }
+      else if (filterModel.name.type === 'notContains') {
+        const filterKeyword: string = filterModel.name.filter.toString().toLowerCase();
+        filteredArray = filteredArray.filter(s => {
+          const temp = s.name.toString();
+          const nameStr: string = temp.toLowerCase();
+          return !nameStr.includes(filterKeyword);
+        });
+        console.log('Filter out songs that dont contain: ' + filterModel.name.filter);
+      }
+    }
+
+    console.log('ROWDATA = ' + this.rowData.length + ' | FILTEREDARRAY = ' +  filteredArray.length);
+    console.log(filteredArray);
   }
 
   createPlaylist() {
