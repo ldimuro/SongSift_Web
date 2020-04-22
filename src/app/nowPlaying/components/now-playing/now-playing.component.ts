@@ -49,53 +49,53 @@ export class NowPlayingComponent implements OnInit {
       }
     },
     {
-      headerName: 'Danceability',
+      headerName: 'Danceability (0.0 – 1.0)',
       field: 'danceability',
-      width: 150,
+      width: 200,
       sortable: true,
       filter: 'agNumberColumnFilter',
       filterParams: {
         suppressAndOrCondition: true,
         filterOptions: ['greaterThan', 'lessThan'],
-        applyButton: true,
+        applyButton: false,
         resetButton: true
       }
     },
     {
-      headerName: 'Happiness',
+      headerName: 'Happiness (0.0 – 1.0)',
       field: 'happiness',
-      width: 150,
+      width: 200,
       sortable: true,
       filter: 'agNumberColumnFilter',
       filterParams: {
         suppressAndOrCondition: true,
-        applyButton: true,
+        applyButton: false,
         resetButton: true,
         filterOptions: ['greaterThan', 'lessThan']
       }
     },
     {
-      headerName: 'Energy',
+      headerName: 'Energy (0.0 – 1.0)',
       field: 'energy',
-      width: 150,
+      width: 200,
       sortable: true,
       filter: 'agNumberColumnFilter',
       filterParams: {
         suppressAndOrCondition: true,
-        applyButton: true,
+        applyButton: false,
         resetButton: true,
         filterOptions: ['greaterThan', 'lessThan']
       }
     },
     {
-      headerName: 'Loudness',
+      headerName: 'Loudness (-60.0 – 0.0)',
       field: 'loudness',
-      width: 150,
+      width: 200,
       sortable: true,
       filter: 'agNumberColumnFilter',
       filterParams: {
         suppressAndOrCondition: true,
-        applyButton: true,
+        applyButton: false,
         resetButton: true,
         filterOptions: ['greaterThan', 'lessThan']
       }
@@ -110,15 +110,11 @@ export class NowPlayingComponent implements OnInit {
 
   ngOnInit() {
     this.nowPlayingSvc.parseCode();
-    console.log('CODE: ' + this.nowPlayingSvc.getCode());
+    // console.log('CODE: ' + this.nowPlayingSvc.getCode());
 
     setTimeout(() => {
       this.requestToken();
     }, 1000);
-
-    // setTimeout(() => {
-    //   this.spotifySvc.getUserId();
-    // }, 1500);
 
     setTimeout(() => {
       this.getSongsFromSpotify();
@@ -198,18 +194,6 @@ export class NowPlayingComponent implements OnInit {
 
   mergeSongAndSongData() {
     this.spotifySvc.mergeSongAndSongData();
-  }
-
-  getTopTracks() {
-    this.spotifySvc.getTopTracks();
-  }
-
-  getTrackData() {
-    this.spotifySvc.getTrackInfo();
-  }
-
-  getUserId() {
-    this.spotifySvc.getUserId();
   }
 
   async applyFilter() {
@@ -295,38 +279,35 @@ export class NowPlayingComponent implements OnInit {
     if (result === '') {
       result = 'Song Sift Playlist';
     }
+
     if (result !== null) {
-      let response = await this.spotifySvc.createPlaylist(result);
-      let playlistId = response['id'];
+      const response = await this.spotifySvc.createPlaylist(result);
+      const playlistId = response['id'];
       console.log(response);
       console.log('Playlist created');
 
       await this.applyFilter();
       console.log('Filters applied');
 
+      // Since Spotify's addSongsToPlaylist endpoint limits # of songs to 100 per request
       let tmpArray = [];
       let count = 0;
       for (let i = 0; i < this.totalFilteredArray.length; i++) {
         if (count === 99) {
-          console.log('LIMIT OF 99 REACHED, ADD SONGS');
           await this.spotifySvc.addSongsToPlaylist(playlistId, tmpArray);
           i--;
           count = 0;
           tmpArray = [];
         }
         else if (i === this.totalFilteredArray.length - 1) {
-          console.log('REACHED END OF ARRAY');
           tmpArray.push(this.totalFilteredArray[i]);
           await this.spotifySvc.addSongsToPlaylist(playlistId, tmpArray);
         }
         else {
           tmpArray.push(this.totalFilteredArray[i]);
-          console.log('NOT AT 99 YET');
         }
         count++;
       }
-
-      // this.spotifySvc.addSongsToPlaylist(playlistId, this.totalFilteredArray);
     }
   }
 
@@ -334,6 +315,7 @@ export class NowPlayingComponent implements OnInit {
     this.router.navigate(['/home'], { replaceUrl: true });
   }
 
+  // To play songs when clicked
   onSelectionChanged() {
     const selectedRows = this.gridApi.getSelectedRows();
     const url = selectedRows[0].previewUrl;

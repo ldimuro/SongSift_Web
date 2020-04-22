@@ -48,7 +48,7 @@ export class SpotifyService {
       params
     };
 
-    console.log(this.url);
+    // console.log(this.url);
     window.location.href = this.url;
   }
 
@@ -75,26 +75,6 @@ export class SpotifyService {
       this.refreshToken = data['refresh_token'];
     });
   }
-
-  getUserId() {
-    const url = 'https://accounts.spotify.com/v1/me';
-
-    const headers: HttpHeaders = new HttpHeaders({
-      Authorization: 'Bearer ' + this.accessToken
-    });
-
-    return this.http.get(url, { headers }).subscribe(data => {
-      console.log('USER ID: ' + data['id']);
-    });
-  }
-
-  getArtist() { }
-
-  getAlbum() { }
-
-  getTrackInfo() { }
-
-  getSong() { }
 
   async getSongsFromSpotify(nextUrl: string) {
     const headers: HttpHeaders = new HttpHeaders({
@@ -125,13 +105,14 @@ export class SpotifyService {
       } else {
         console.log('Done getting songs');
 
+        // Since Spotify's getAudioFeatures endpoint limits # of songs to 100 per request
         let idStr = '';
         let first = true;
         for (let i = 0; i < this.songs.length; i++) {
           if (first) {
             idStr += this.songs[i].songId;
             first = false;
-          } 
+          }
           else if (i % 99 === 0) {
             const response = await this.getSongData(idStr);
             await this.parseSongData(response);
@@ -140,7 +121,7 @@ export class SpotifyService {
             idStr = '';
             first = true;
             i--;
-          } 
+          }
           else {
             idStr += ',' + this.songs[i].songId;
 
@@ -221,12 +202,8 @@ export class SpotifyService {
     this.filteredSongIdArray = JSON.parse(this.filteredSongIdArray);
   }
 
-
-
-
   getAllSongs() {
     return this.songs;
-    // console.log(this.songs);
   }
 
   getAllSongData() {
@@ -249,25 +226,6 @@ export class SpotifyService {
 
     const response = await this.http.post(playlistUrl, body , {headers}).toPromise();
     return response;
-
-    // return this.http.post(playlistUrl, body , {headers})
-    //   .subscribe(data => console.log(data));
   }
-
-
-
-
-  getTopTracks() {
-    const url = 'https://api.spotify.com/v1/me/top/tracks';
-
-    const headers: HttpHeaders = new HttpHeaders({
-      Authorization: 'Bearer ' + this.accessToken
-    });
-
-    return this.http.get(url, { headers }).subscribe(data => {
-      console.log(data);
-    });
-  }
-
 
 }
