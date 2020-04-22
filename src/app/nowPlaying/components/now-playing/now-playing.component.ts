@@ -17,6 +17,7 @@ export class NowPlayingComponent implements OnInit {
   token: string;
   songs: Song[] = [];
   rowDataArray = [];
+  totalFilteredArray = [];
 
   private gridApi;
   private gridColumnApi;
@@ -50,7 +51,8 @@ export class NowPlayingComponent implements OnInit {
     {
       headerName: 'Danceability',
       field: 'danceability',
-      width: 150, sortable: true,
+      width: 150, 
+      sortable: true,
       filter: 'agNumberColumnFilter',
       filterParams: {
         suppressAndOrCondition: true,
@@ -147,7 +149,9 @@ export class NowPlayingComponent implements OnInit {
         happiness: this.songs[i].data.happiness,
         energy: this.songs[i].data.energy,
         loudness: this.songs[i].data.loudness,
-        previewUrl: this.songs[i].previewUrl
+        previewUrl: this.songs[i].previewUrl,
+        id: this.songs[i].songId,
+        uri: this.songs[i].uri
       };
 
       this.rowDataArray.push(x);
@@ -176,10 +180,6 @@ export class NowPlayingComponent implements OnInit {
     let highVolume = -3.5;
     let lowVolume = -10;
 
-    const filteredArray = this.rowDataArray.filter(s => s.energy >= highEnergy && s.loudness >= highVolume);
-    // const filteredArray = this.rowDataArray.filter(s => s.energy <= lowEnergy && s.danceability >= highDance);
-    console.log('Finished formatting response: ' + filteredArray.length + ' songs');
-
     this.rowData = this.rowDataArray;
     // this.rowData = filteredArray;
   }
@@ -204,57 +204,44 @@ export class NowPlayingComponent implements OnInit {
     this.spotifySvc.getUserId();
   }
 
-  getFilterModel() {
+  async applyFilter() {
     console.log(this.gridApi.getFilterModel());
     const filterModel = this.gridApi.getFilterModel();
     let filteredArray = this.rowDataArray;
 
-    if (filterModel.loudness) {
-      console.log('has loudness');
+    if (filterModel.loudness) {     // If LOUDNESS filter has been applied
       if (filterModel.loudness.type === 'greaterThan') {
         filteredArray = filteredArray.filter(s => s.loudness > filterModel.loudness.filter);
-        console.log('Filter out songs with loudness > ' + filterModel.loudness.filter);
       }
       else if (filterModel.loudness.type === 'lessThan') {
         filteredArray = filteredArray.filter(s => s.loudness < filterModel.loudness.filter);
-        console.log('Filter out songs with loudness < ' + filterModel.loudness.filter);
       }
     }
-    if (filterModel.energy) {
-      console.log('has energy');
+    if (filterModel.energy) {       // If ENERGY filter has been applied
       if (filterModel.energy.type === 'greaterThan') {
         filteredArray = filteredArray.filter(s => s.energy > filterModel.energy.filter);
-        console.log('Filter out songs with energy > ' + filterModel.energy.filter);
       }
       else if (filterModel.energy.type === 'lessThan') {
         filteredArray = filteredArray.filter(s => s.energy < filterModel.energy.filter);
-        console.log('Filter out songs with energy < ' + filterModel.energy.filter);
       }
     }
-    if (filterModel.happiness) {
-      console.log('has happiness');
+    if (filterModel.happiness) {    // If HAPPINESS filter has been applied
       if (filterModel.happiness.type === 'greaterThan') {
         filteredArray = filteredArray.filter(s => s.happiness > filterModel.happiness.filter);
-        console.log('Filter out songs with happiness > ' + filterModel.happiness.filter);
       }
       else if (filterModel.happiness.type === 'lessThan') {
         filteredArray = filteredArray.filter(s => s.happiness < filterModel.happiness.filter);
-        console.log('Filter out songs with happiness < ' + filterModel.happiness.filter);
       }
     }
-    if (filterModel.danceability) {
-      console.log('has danceability');
+    if (filterModel.danceability) { // If DANCEABILITY filter has been applied
       if (filterModel.danceability.type === 'greaterThan') {
         filteredArray = filteredArray.filter(s => s.danceability > filterModel.danceability.filter);
-        console.log('Filter out songs with danceability > ' + filterModel.danceability.filter);
       }
       else if (filterModel.danceability.type === 'lessThan') {
         filteredArray = filteredArray.filter(s => s.danceability < filterModel.danceability.filter);
-        console.log('Filter out songs with danceability < ' + filterModel.danceability.filter);
       }
     }
-    if (filterModel.artist) {
-      console.log('has artist');
+    if (filterModel.artist) {       // If ARTIST filter has been applied
       if (filterModel.artist.type === 'contains') {
         const filterKeyword: string = filterModel.artist.filter.toString().toLowerCase();
         filteredArray = filteredArray.filter(s => {
@@ -262,7 +249,6 @@ export class NowPlayingComponent implements OnInit {
           const artistStr: string = temp.toLowerCase();
           return artistStr.includes(filterKeyword);
         });
-        console.log('Filter out songs that contain: ' + filterKeyword);
       }
       else if (filterModel.artist.type === 'notContains') {
         const filterKeyword: string = filterModel.artist.filter.toString().toLowerCase();
@@ -271,11 +257,9 @@ export class NowPlayingComponent implements OnInit {
           const artistStr: string = temp.toLowerCase();
           return !artistStr.includes(filterKeyword);
         });
-        console.log('Filter out songs that dont contain: ' + filterModel.artist.filter);
       }
     }
-    if (filterModel.name) {
-      console.log('has name');
+    if (filterModel.name) {         // If NAME filter has been applied
       if (filterModel.name.type === 'contains') {
         const filterKeyword: string = filterModel.name.filter.toString().toLowerCase();
         filteredArray = filteredArray.filter(s => {
@@ -283,7 +267,6 @@ export class NowPlayingComponent implements OnInit {
           const nameStr: string = temp.toLowerCase();
           return nameStr.includes(filterKeyword);
         });
-        console.log('Filter out songs that contain: ' + filterModel.name.filter);
       }
       else if (filterModel.name.type === 'notContains') {
         const filterKeyword: string = filterModel.name.filter.toString().toLowerCase();
@@ -292,20 +275,51 @@ export class NowPlayingComponent implements OnInit {
           const nameStr: string = temp.toLowerCase();
           return !nameStr.includes(filterKeyword);
         });
-        console.log('Filter out songs that dont contain: ' + filterModel.name.filter);
       }
     }
 
-    console.log('ROWDATA = ' + this.rowData.length + ' | FILTEREDARRAY = ' +  filteredArray.length);
-    console.log(filteredArray);
+    this.totalFilteredArray = filteredArray;
+    console.log(this.totalFilteredArray);
   }
 
-  createPlaylist() {
+  async createPlaylist() {
     let result = window.prompt('Enter name for playlist');
     if (result === '') {
       result = 'Song Sift Playlist';
     }
-    this.spotifySvc.createPlaylist(result);
+    if (result !== null) {
+      let response = await this.spotifySvc.createPlaylist(result);
+      let playlistId = response['id'];
+      console.log(response);
+      console.log('Playlist created');
+
+      await this.applyFilter();
+      console.log('Filters applied');
+
+      let tmpArray = [];
+      let count = 0;
+      for (let i = 0; i < this.totalFilteredArray.length; i++) {
+        if (count === 99) {
+          console.log('LIMIT OF 99 REACHED, ADD SONGS');
+          await this.spotifySvc.addSongsToPlaylist(playlistId, tmpArray);
+          i--;
+          count = 0;
+          tmpArray = [];
+        }
+        else if (i === this.totalFilteredArray.length - 1) {
+          console.log('REACHED END OF ARRAY');
+          tmpArray.push(this.totalFilteredArray[i]);
+          await this.spotifySvc.addSongsToPlaylist(playlistId, tmpArray);
+        }
+        else {
+          tmpArray.push(this.totalFilteredArray[i]);
+          console.log('NOT AT 99 YET');
+        }
+        count++;
+      }
+
+      // this.spotifySvc.addSongsToPlaylist(playlistId, this.totalFilteredArray);
+    }
   }
 
   backToHome() {

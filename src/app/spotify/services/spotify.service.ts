@@ -25,6 +25,7 @@ export class SpotifyService {
   private userSongAnalysis: any;
   private songs: Song[] = [];
   private songData: SongData[] = [];
+  private filteredSongIdArray;
 
   constructor(private http: HttpClient,
               private nowPlayingSvc: NowPlayingService) { }
@@ -51,7 +52,7 @@ export class SpotifyService {
     window.location.href = this.url;
   }
 
-  requestToken() {
+  async requestToken() {
     const tokenUrl = 'https://accounts.spotify.com/api/token';
 
     const headers = {
@@ -67,7 +68,6 @@ export class SpotifyService {
 
     // tslint:disable-next-line:max-line-length
     const newBody = `grant_type=authorization_code&code=${this.nowPlayingSvc.getCode()}&redirect_uri=${encodeURIComponent('http://localhost:4200/now-playing/')}`;
-
 
     return this.http.post(tokenUrl, newBody, { headers }).subscribe(data => {
       console.log(data);
@@ -110,13 +110,13 @@ export class SpotifyService {
       for (let i = 0; i < length; i++) {
         const songName = this.userTrackData.items[i].track.name;
         const songId = this.userTrackData.items[i].track.id;
+        const uri = this.userTrackData.items[i].track.uri;
         const artist = this.userTrackData.items[i].track.artists[0].name;
         const album = this.userTrackData.items[i].track.album.name;
         const popularity = this.userTrackData.items[i].track.popularity;
         const previewUrl = this.userTrackData.items[i].track.preview_url;
 
-        const song: Song = new Song(songName, songId, artist, album, popularity, previewUrl);
-
+        const song: Song = new Song(songName, songId, artist, album, popularity, previewUrl, uri);
         this.songs.push(song);
       }
       if (this.userTrackData.next !== null) {
@@ -131,7 +131,8 @@ export class SpotifyService {
           if (first) {
             idStr += this.songs[i].songId;
             first = false;
-          } else if (i % 99 === 0) {
+          } 
+          else if (i % 99 === 0) {
             const response = await this.getSongData(idStr);
             await this.parseSongData(response);
             console.log(response);
@@ -139,7 +140,8 @@ export class SpotifyService {
             idStr = '';
             first = true;
             i--;
-          } else {
+          } 
+          else {
             idStr += ',' + this.songs[i].songId;
 
             if (i === this.songs.length - 1) {
@@ -190,6 +192,38 @@ export class SpotifyService {
     console.log('Finished merging');
   }
 
+  // 5sUm5SXdWTLNaR4tqE7jN4
+  async addSongsToPlaylist(playlistId: string, songs: any[]) {
+
+    this.createSongIdArray(songs);
+
+    const playlistUrl = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
+    const headers: HttpHeaders = new HttpHeaders({
+      Authorization: 'Bearer ' + this.accessToken,
+      'Content-Type': 'application/json'
+    });
+
+    const body = {
+      uris: this.filteredSongIdArray
+    };
+
+    let response = this.http.post(playlistUrl, body , {headers}).toPromise();
+    return response;
+  }
+
+  createSongIdArray(songs: any[]) {
+    const ids = [];
+    for (let i = 0; i < songs.length; i++) {
+      ids.push(songs[i].uri);
+    }
+    this.filteredSongIdArray = ids;
+    this.filteredSongIdArray = JSON.stringify(this.filteredSongIdArray);
+    this.filteredSongIdArray = JSON.parse(this.filteredSongIdArray);
+  }
+
+
+
+
   getAllSongs() {
     return this.songs;
     // console.log(this.songs);
@@ -200,7 +234,7 @@ export class SpotifyService {
     return this.songData;
   }
 
-  createPlaylist(playlistName: string) {
+  async createPlaylist(playlistName: string) {
     const playlistUrl = 'https://api.spotify.com/v1/users/ldimuro/playlists';
 
     const headers: HttpHeaders = new HttpHeaders({
@@ -213,8 +247,11 @@ export class SpotifyService {
       description: 'Playlist generated using Song Sift'
     };
 
-    return this.http.post(playlistUrl, body , {headers})
-      .subscribe(data => console.log(data));
+    const response = await this.http.post(playlistUrl, body , {headers}).toPromise();
+    return response;
+
+    // return this.http.post(playlistUrl, body , {headers})
+    //   .subscribe(data => console.log(data));
   }
 
 
