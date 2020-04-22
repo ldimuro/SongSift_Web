@@ -51,12 +51,14 @@ export class NowPlayingComponent implements OnInit {
     {
       headerName: 'Danceability',
       field: 'danceability',
-      width: 150, 
+      width: 150,
       sortable: true,
       filter: 'agNumberColumnFilter',
       filterParams: {
         suppressAndOrCondition: true,
-        filterOptions: ['greaterThan', 'lessThan']
+        filterOptions: ['greaterThan', 'lessThan'],
+        applyButton: true,
+        resetButton: true
       }
     },
     {
@@ -67,6 +69,8 @@ export class NowPlayingComponent implements OnInit {
       filter: 'agNumberColumnFilter',
       filterParams: {
         suppressAndOrCondition: true,
+        applyButton: true,
+        resetButton: true,
         filterOptions: ['greaterThan', 'lessThan']
       }
     },
@@ -78,6 +82,8 @@ export class NowPlayingComponent implements OnInit {
       filter: 'agNumberColumnFilter',
       filterParams: {
         suppressAndOrCondition: true,
+        applyButton: true,
+        resetButton: true,
         filterOptions: ['greaterThan', 'lessThan']
       }
     },
@@ -89,6 +95,8 @@ export class NowPlayingComponent implements OnInit {
       filter: 'agNumberColumnFilter',
       filterParams: {
         suppressAndOrCondition: true,
+        applyButton: true,
+        resetButton: true,
         filterOptions: ['greaterThan', 'lessThan']
       }
     }
