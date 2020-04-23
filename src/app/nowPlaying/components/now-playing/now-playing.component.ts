@@ -25,6 +25,19 @@ export class NowPlayingComponent implements OnInit {
 
   audio = new Audio();
 
+  happinessChoice: string;
+  energyChoice: string;
+  loudnessChoice: string;
+  danceabilityChoice: string;
+  highEnergy = 0.85;
+  lowEnergy = 0.3;
+  highHappiness = 0.75;
+  lowHappiness = 0.3;
+  highDance = 0.8;
+  lowDance = 0.5;
+  highVolume = -3.5;
+  lowVolume = -10;
+
   columnDefs = [
     {
       headerName: 'Name',
@@ -49,7 +62,7 @@ export class NowPlayingComponent implements OnInit {
       }
     },
     {
-      headerName: 'Danceability (0.0 – 1.0)',
+      headerName: 'Danceability',
       field: 'danceability',
       width: 200,
       sortable: true,
@@ -62,7 +75,7 @@ export class NowPlayingComponent implements OnInit {
       }
     },
     {
-      headerName: 'Happiness (0.0 – 1.0)',
+      headerName: 'Happiness',
       field: 'happiness',
       width: 200,
       sortable: true,
@@ -75,7 +88,7 @@ export class NowPlayingComponent implements OnInit {
       }
     },
     {
-      headerName: 'Energy (0.0 – 1.0)',
+      headerName: 'Energy',
       field: 'energy',
       width: 200,
       sortable: true,
@@ -88,7 +101,7 @@ export class NowPlayingComponent implements OnInit {
       }
     },
     {
-      headerName: 'Loudness (-60.0 – 0.0)',
+      headerName: 'Loudness',
       field: 'loudness',
       width: 200,
       sortable: true,
@@ -322,6 +335,97 @@ export class NowPlayingComponent implements OnInit {
 
     this.audio.src = url;
     this.audio.play();
+  }
+
+  applyCriteriaValues() {
+    // If HAPPINESS radio button is selected
+    if (this.happinessChoice === '0') {
+      var happyFilterComponent = this.gridApi.getFilterInstance('happiness');
+      happyFilterComponent.setModel({
+        type: 'lessThan',
+        filter: this.lowHappiness,
+        filterTo: null,
+      });
+      this.gridApi.onFilterChanged();
+    }
+    else if (this.happinessChoice === '1') {
+      var happyFilterComponent = this.gridApi.getFilterInstance('happiness');
+      happyFilterComponent.setModel({
+        type: 'greaterThan',
+        filter: this.highHappiness,
+        filterTo: null,
+      });
+      this.gridApi.onFilterChanged();
+    }
+
+    // If ENERGY radio button is selected
+    if (this.energyChoice === '0') {
+      var energyFilterComponent = this.gridApi.getFilterInstance('energy');
+      energyFilterComponent.setModel({
+        type: 'lessThan',
+        filter: this.lowEnergy,
+        filterTo: null,
+      });
+      this.gridApi.onFilterChanged();
+    }
+    else if (this.energyChoice === '1') {
+      var energyFilterComponent = this.gridApi.getFilterInstance('energy');
+      energyFilterComponent.setModel({
+        type: 'greaterThan',
+        filter: this.highEnergy,
+        filterTo: null,
+      });
+      this.gridApi.onFilterChanged();
+    }
+
+    // If LOUDNESS radio button is selected
+    if (this.loudnessChoice === '0') {
+      var loudFilterComponent = this.gridApi.getFilterInstance('loudness');
+      loudFilterComponent.setModel({
+        type: 'lessThan',
+        filter: this.lowVolume,
+        filterTo: null,
+      });
+      this.gridApi.onFilterChanged();
+    }
+    else if (this.loudnessChoice === '1') {
+      var loudFilterComponent = this.gridApi.getFilterInstance('loudness');
+      loudFilterComponent.setModel({
+        type: 'greaterThan',
+        filter: this.highVolume,
+        filterTo: null,
+      });
+      this.gridApi.onFilterChanged();
+    }
+
+    // If DANCEABLE radio button is selected
+    if (this.danceabilityChoice === '0') {
+      var danceFilterComponent = this.gridApi.getFilterInstance('danceability');
+      danceFilterComponent.setModel({
+        type: 'lessThan',
+        filter: this.lowDance,
+        filterTo: null,
+      });
+      this.gridApi.onFilterChanged();
+    }
+    else if (this.danceabilityChoice === '1') {
+      var danceFilterComponent = this.gridApi.getFilterInstance('danceability');
+      danceFilterComponent.setModel({
+        type: 'greaterThan',
+        filter: this.highDance,
+        filterTo: null,
+      });
+      this.gridApi.onFilterChanged();
+    }
+  }
+
+  clearCriteriaValues() {
+    this.happinessChoice = null;
+    this.energyChoice = null;
+    this.loudnessChoice = null;
+    this.danceabilityChoice = null;
+
+    this.gridApi.setFilterModel(null);
   }
 
   onGridReady(params) {

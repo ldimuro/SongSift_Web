@@ -7,11 +7,12 @@ import { NowPlayingComponent } from './nowPlaying/components/now-playing/now-pla
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material/radio';
 import { SpotifyComponent } from './spotify/components/spotify/spotify.component';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { AgGridModule } from 'ag-grid-angular';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 
 @NgModule({
@@ -30,7 +31,9 @@ import { AgGridModule } from 'ag-grid-angular';
     ReactiveFormsModule,
     MatRadioModule,
     HttpClientModule,
-    AgGridModule.withComponents([])
+    AgGridModule.withComponents([]),
+    MatSlideToggleModule,
+    FormsModule
   ],
   exports: [MatButtonToggleModule, MatIconModule, ReactiveFormsModule, BrowserAnimationsModule, MatRadioModule],
   providers: [HomeComponent],

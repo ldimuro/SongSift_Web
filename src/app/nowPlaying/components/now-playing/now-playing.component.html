@@ -1,33 +1,43 @@
-<div class="container">
-    <div class="criteriaContainer">
-        <div class="criteria">
-            <span>Happiness:</span>
-            <mat-radio-group>
-                <mat-radio-button value="1">😄</mat-radio-button>
-                <mat-radio-button value="2">😭</mat-radio-button>
-            </mat-radio-group>
-            <br />
-            <span>Energy:</span>
-            <mat-radio-group>
-                <mat-radio-button value="1">🐇</mat-radio-button>
-                <mat-radio-button value="2">🐢</mat-radio-button>
-            </mat-radio-group>
-            <br />
-            <span>Loudness:</span>
-            <mat-radio-group>
-                <mat-radio-button value="1">💥</mat-radio-button>
-                <mat-radio-button value="2">💤</mat-radio-button>
-            </mat-radio-group>
-            <br />
-        </div>
-    </div>
-</div>
-
-
 <br />
 <button (click)="backToHome()">Back</button>
 <button (click)="createPlaylist()">Create Playlist</button>
 <br />
+
+<div class="container">
+    <div class="criteriaContainer">
+        <div class="criteria">
+            <span>Happiness:</span>
+            <mat-radio-group [(ngModel)]="happinessChoice">
+                <mat-radio-button value="0">😭</mat-radio-button>
+                <mat-radio-button value="1">😄</mat-radio-button>
+            </mat-radio-group>
+            <br />
+            <span>Energy:</span>
+            <mat-radio-group [(ngModel)]="energyChoice">
+                <mat-radio-button value="0">🐢</mat-radio-button>
+                <mat-radio-button value="1">🐇</mat-radio-button>
+            </mat-radio-group>
+            <br />
+            <span>Loudness:</span>
+            <mat-radio-group [(ngModel)]="loudnessChoice">
+                <mat-radio-button value="0">💤</mat-radio-button>
+                <mat-radio-button value="1">💥</mat-radio-button>
+            </mat-radio-group>
+            <br />
+            <span>Danceable:</span>
+            <mat-radio-group [(ngModel)]="danceabilityChoice">
+                <mat-radio-button value="0">🚶‍♂️</mat-radio-button>
+                <mat-radio-button value="1">💃</mat-radio-button>
+            </mat-radio-group>
+        </div>
+    </div>
+    <br />
+    <button (click)="applyCriteriaValues()">Apply</button>
+    <button (click)="clearCriteriaValues()">Reset</button>
+    <br />
+</div>
+
+
 <ag-grid-angular style="width: 1425px; height: 625px;" class="ag-theme-alpine" [rowData]="rowData"
     [columnDefs]="columnDefs" [rowSelection]="rowSelection" (selectionChanged)="onSelectionChanged()"
     (gridReady)="onGridReady($event)" [suppressCellSelection]=true>
