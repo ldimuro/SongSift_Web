@@ -7,3 +7,29 @@
     // justify-content: center;
     background-color: #ff737e;
 }
+
+.container {
+    display: inline-block;
+}
+
+.criteriaContainer {
+    text-align: right;
+}
+
+.criteria {
+    display: inline-block;
+}
+
+.mat-radio-outer-circle {
+    // border-width: 0px;
+    // border-top-width: 0px;
+    // border-bottom-width: 0px;
+    // border-left-width: 0px;
+    // border-right-width: 0px;
+    border-style: none;
+    border-color: green;
+}
+
+.mat-radio-button {
+    border-style: none;
+}

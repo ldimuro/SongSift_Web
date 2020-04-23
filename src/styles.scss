@@ -3,8 +3,18 @@
 @import "../node_modules/ag-grid-community/src/styles/ag-theme-alpine/sass/ag-theme-alpine-mixin.scss";
 
 .ag-theme-alpine {
-    @include ag-theme-alpine((
-        odd-row-background-color:  #FFEDEE,
-        header-background-color: #ffccd0
-    ));
+    @include ag-theme-alpine(
+        (
+            odd-row-background-color: #ffedee,
+            header-background-color: #ffccd0,
+        )
+    );
+}
+
+.mat-radio-outer-circle {
+    border-color: transparent;
+}
+
+.mat-radio-label-content {
+    padding-right: 20px;
 }

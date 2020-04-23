@@ -66,7 +66,6 @@ export class SpotifyService {
       redirect_uri: encodeURIComponent('http://localhost:4200/now-playing/')
     };
 
-    // tslint:disable-next-line:max-line-length
     const newBody = `grant_type=authorization_code&code=${this.nowPlayingSvc.getCode()}&redirect_uri=${encodeURIComponent('http://localhost:4200/now-playing/')}`;
 
     return this.http.post(tokenUrl, newBody, { headers }).subscribe(data => {
@@ -173,7 +172,6 @@ export class SpotifyService {
     console.log('Finished merging');
   }
 
-  // 5sUm5SXdWTLNaR4tqE7jN4
   async addSongsToPlaylist(playlistId: string, songs: any[]) {
 
     this.createSongIdArray(songs);
