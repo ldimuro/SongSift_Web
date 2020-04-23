@@ -1,42 +1,44 @@
-<br />
-<button (click)="backToHome()">Back</button>
-<button (click)="createPlaylist()">Create Playlist</button>
-<br />
-
-<div class="container">
-    <div class="criteriaContainer">
-        <div class="criteria">
-            <span>Happiness:</span>
-            <mat-radio-group [(ngModel)]="happinessChoice">
-                <mat-radio-button value="0">😭</mat-radio-button>
-                <mat-radio-button value="1">😄</mat-radio-button>
-            </mat-radio-group>
-            <br />
-            <span>Energy:</span>
-            <mat-radio-group [(ngModel)]="energyChoice">
-                <mat-radio-button value="0">🐢</mat-radio-button>
-                <mat-radio-button value="1">🐇</mat-radio-button>
-            </mat-radio-group>
-            <br />
-            <span>Loudness:</span>
-            <mat-radio-group [(ngModel)]="loudnessChoice">
-                <mat-radio-button value="0">💤</mat-radio-button>
-                <mat-radio-button value="1">💥</mat-radio-button>
-            </mat-radio-group>
-            <br />
-            <span>Danceable:</span>
-            <mat-radio-group [(ngModel)]="danceabilityChoice">
-                <mat-radio-button value="0">🚶‍♂️</mat-radio-button>
-                <mat-radio-button value="1">💃</mat-radio-button>
-            </mat-radio-group>
-        </div>
-    </div>
-    <br />
-    <button (click)="applyCriteriaValues()">Apply</button>
-    <button (click)="clearCriteriaValues()">Reset</button>
-    <br />
+<link href="https://fonts.googleapis.com/css?family=Lobster&display=swap" rel="stylesheet">
+<h1>Song Sift</h1>
+<div class="headerButtons">
+    <button (click)="backToHome()" class="backButton">&lt;&nbsp;&nbsp;Back</button>
+    <button (click)="createPlaylist()" class="buttons createPlaylist">Export to Spotify</button>
 </div>
 
+
+<div class="criteriaContainer">
+    <div class="criteria">
+        <span>Happiness:</span>
+        <mat-radio-group [(ngModel)]="happinessChoice">
+            <mat-radio-button value="0">😭</mat-radio-button>
+            <mat-radio-button value="1">😄</mat-radio-button>
+        </mat-radio-group>
+        <br />
+        <span>Energy:</span>
+        <mat-radio-group [(ngModel)]="energyChoice">
+            <mat-radio-button value="0">🐢</mat-radio-button>
+            <mat-radio-button value="1">🐇</mat-radio-button>
+        </mat-radio-group>
+        <br />
+        <span>Loudness:</span>
+        <mat-radio-group [(ngModel)]="loudnessChoice">
+            <mat-radio-button value="0">💤</mat-radio-button>
+            <mat-radio-button value="1">💥</mat-radio-button>
+        </mat-radio-group>
+        <br />
+        <span>Danceability:</span>
+        <mat-radio-group [(ngModel)]="danceabilityChoice">
+            <mat-radio-button value="0">🚶‍♂️</mat-radio-button>
+            <mat-radio-button value="1">💃</mat-radio-button>
+        </mat-radio-group>
+    </div>
+</div>
+
+<div class="criteriaButtons">
+    <button (click)="applyCriteriaValues()" class="buttons">Apply</button>
+    <button (click)="clearCriteriaValues()" class="buttons">Reset</button>
+    <br />
+</div>
 
 <ag-grid-angular style="width: 1425px; height: 625px;" class="ag-theme-alpine" [rowData]="rowData"
     [columnDefs]="columnDefs" [rowSelection]="rowSelection" (selectionChanged)="onSelectionChanged()"
