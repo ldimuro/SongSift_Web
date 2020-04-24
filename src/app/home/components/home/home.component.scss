@@ -15,7 +15,7 @@ h1 {
 .centerButton {
     display: block;
     margin: auto;
-    padding: 10px 100px;
+    padding: 10px 50px;
     background-color: #ff737e;
     color: white;
     font-weight: bold;
@@ -27,5 +27,26 @@ h1 {
 
 button:focus {
     background-color: #ff4756;
+}
+
+.text {
+    width: 40%;
+    margin: 0 auto;
+    // color: #ff4756;
+}
+
+ul {
+    margin: 0 auto;
+    display: table;
+}
+
+.footer {
+    text-align: center;
+    color: #ff4756;
+    font-weight: bold;
+}
+
+h4 {
+    font-size: 14px;
 }
 

@@ -177,31 +177,7 @@ export class NowPlayingComponent implements OnInit {
 
     this.showLoadingBar = false;
 
-    // +energy && +happiness    = YES (71 songs)
-    // +energy && -happiness    = NO
-    // +energy && +danceability = NO
-    // +energy && -danceability = NO
-    // +energy && +loudness     = YES (70 songs)
-    // +energy && -loudness     = NO
-    // -energy && +happiness    = NO
-    // -energy && -happiness    = YES (44 songs)
-    // -energy && +danceability = MAYBE (6 songs)
-
-
-    let highEnergy = 0.85;
-    let lowEnergy = 0.3;
-
-    let highHappiness = 0.75;
-    let lowHappiness = 0.3;
-
-    // NO NEED FOR LOW DANCEABILITY
-    let highDance = 0.8;
-
-    let highVolume = -3.5;
-    let lowVolume = -10;
-
     this.rowData = this.rowDataArray;
-    // this.rowData = filteredArray;
   }
 
   getAllSongData() {
