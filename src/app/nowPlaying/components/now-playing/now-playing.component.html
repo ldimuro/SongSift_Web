@@ -8,25 +8,25 @@
 
 <div class="criteriaContainer">
     <div class="criteria">
-        <span>Happiness:</span>
+        <span>Happiness:&nbsp;&nbsp;</span>
         <mat-radio-group [(ngModel)]="happinessChoice">
-            <mat-radio-button value="0">😭</mat-radio-button>
+            <mat-radio-button color="accent" value="0">😭</mat-radio-button>
             <mat-radio-button value="1">😄</mat-radio-button>
         </mat-radio-group>
         <br />
-        <span>Energy:</span>
+        <span>Energy:&nbsp;&nbsp;</span>
         <mat-radio-group [(ngModel)]="energyChoice">
             <mat-radio-button value="0">🐢</mat-radio-button>
             <mat-radio-button value="1">🐇</mat-radio-button>
         </mat-radio-group>
         <br />
-        <span>Loudness:</span>
+        <span>Loudness:&nbsp;&nbsp;</span>
         <mat-radio-group [(ngModel)]="loudnessChoice">
             <mat-radio-button value="0">💤</mat-radio-button>
             <mat-radio-button value="1">💥</mat-radio-button>
         </mat-radio-group>
         <br />
-        <span>Danceability:</span>
+        <span>Danceability:&nbsp;&nbsp;</span>
         <mat-radio-group [(ngModel)]="danceabilityChoice">
             <mat-radio-button value="0">🚶‍♂️</mat-radio-button>
             <mat-radio-button value="1">💃</mat-radio-button>
@@ -40,7 +40,11 @@
     <br />
 </div>
 
-<ag-grid-angular style="width: 1425px; height: 625px;" class="ag-theme-alpine" [rowData]="rowData"
+<div *ngIf="showLoadingBar">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>
+
+<ag-grid-angular style="width: 1440px; height: 360px;" class="ag-theme-alpine" [rowData]="rowData"
     [columnDefs]="columnDefs" [rowSelection]="rowSelection" (selectionChanged)="onSelectionChanged()"
     (gridReady)="onGridReady($event)" [suppressCellSelection]=true>
 </ag-grid-angular>

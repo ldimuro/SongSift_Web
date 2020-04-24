@@ -13,6 +13,8 @@ import { SpotifyComponent } from './spotify/components/spotify/spotify.component
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { AgGridModule } from 'ag-grid-angular';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 
 @NgModule({
@@ -33,7 +35,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     HttpClientModule,
     AgGridModule.withComponents([]),
     MatSlideToggleModule,
-    FormsModule
+    FormsModule,
+    MatProgressSpinnerModule,
+    MatProgressBarModule
   ],
   exports: [MatButtonToggleModule, MatIconModule, ReactiveFormsModule, BrowserAnimationsModule, MatRadioModule],
   providers: [HomeComponent],

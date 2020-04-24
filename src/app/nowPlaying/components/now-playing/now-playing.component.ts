@@ -22,6 +22,7 @@ export class NowPlayingComponent implements OnInit {
   private gridApi;
   private gridColumnApi;
   rowSelection = 'single';
+  showLoadingBar = true;
 
   audio = new Audio();
 
@@ -42,7 +43,7 @@ export class NowPlayingComponent implements OnInit {
     {
       headerName: 'Name',
       field: 'name',
-      width: 300,
+      width: 320,
       sortable: true,
       filter: true,
       filterParams: {
@@ -53,7 +54,7 @@ export class NowPlayingComponent implements OnInit {
     {
       headerName: 'Artist',
       field: 'artist',
-      width: 300,
+      width: 320,
       sortable: true,
       filter: true,
       filterParams: {
@@ -173,6 +174,8 @@ export class NowPlayingComponent implements OnInit {
 
       this.rowDataArray.push(x);
     }
+
+    this.showLoadingBar = false;
 
     // +energy && +happiness    = YES (71 songs)
     // +energy && -happiness    = NO
@@ -315,6 +318,7 @@ export class NowPlayingComponent implements OnInit {
         else if (i === this.totalFilteredArray.length - 1) {
           tmpArray.push(this.totalFilteredArray[i]);
           await this.spotifySvc.addSongsToPlaylist(playlistId, tmpArray);
+          alert("Playlist created!");
         }
         else {
           tmpArray.push(this.totalFilteredArray[i]);
