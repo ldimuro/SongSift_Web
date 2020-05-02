@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   }
 
   // Spotify Login button
-  buttonClicked() {
+  loginButtonClicked() {
     this._spotifyService.getAuth();
   }
 

@@ -136,15 +136,15 @@ export class NowPlayingComponent implements OnInit {
 
     setTimeout(() => {
       this.getAllSongData();
-    }, 10000);
-
-    setTimeout(() => {
-      this.mergeSongAndSongData();
     }, 11000);
 
     setTimeout(() => {
-      this.getAllSongs();
+      this.mergeSongAndSongData();
     }, 12000);
+
+    setTimeout(() => {
+      this.getAllSongs();
+    }, 13000);
   }
 
   requestToken() {
@@ -264,6 +264,7 @@ export class NowPlayingComponent implements OnInit {
 
     this.totalFilteredArray = filteredArray;
     console.log(this.totalFilteredArray);
+    console.log('NUMBER OF SONGS: ' + this.totalFilteredArray.length);
   }
 
   async createPlaylist() {
