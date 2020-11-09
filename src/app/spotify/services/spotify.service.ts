@@ -13,7 +13,7 @@ import { SongData } from '../models/songData.model';
 })
 export class SpotifyService {
   private clientId = '30a58f631e5d4a0d8331fc0d29e052f9';
-  private clientSecret = '42c2e656f635427c95618a49a1c6ce07';
+  private clientSecret = ''; //enter Client Secret
   private body: any;
   private url = 'https://accounts.spotify.com/authorize?client_id=30a58f631e5d4a0d8331fc0d29e052f9' +
     '&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A4200%2Fnow-playing%2F&scope=user-read-private%20' +
