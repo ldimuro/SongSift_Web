@@ -1,5 +1,9 @@
 # SongSiftWeb
 
+A web app that allows users to filter their Spotify library and create playlists based on 4 song criteria: Energy, Happiness, Danceabiltiy, and Loudness
+
+<img src="/src/assets/song_sift_screenshot.png" alt="SongSift Screenshot" title="SongSift Screenshot" width="800" />
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.14.
 
 ## Development server
